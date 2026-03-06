@@ -5,6 +5,8 @@
   width: 100%;
   user-select: none;
   box-shadow: 0 -4px 20px rgba(0,0,0,0.15);
+  /* Eliminate 300ms tap delay on iOS without double-fire */
+  touch-action: manipulation;
 }
 
 /* ── Tabs ── */
@@ -70,6 +72,7 @@
   flex: 1 1 0;
   min-width: 0;
   padding: 12px 4px;
+  touch-action: manipulation;
   background: #ffffff;
   border: 1px solid #d0d0d8;
   border-bottom: 2px solid #b8b8c2;
@@ -115,6 +118,7 @@
 .toolBtn {
   flex: 1;
   padding: 11px 4px;
+  touch-action: manipulation;
   background: #dcdce4;
   border: 1px solid #c0c0cc;
   border-bottom: 2px solid #a8a8b8;

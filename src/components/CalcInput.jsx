@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import * as math from 'mathjs'
 import { BlockMath } from 'react-katex'
 import 'katex/dist/katex.min.css'
@@ -31,7 +31,11 @@ export default function CalcInput({
   const useKb = type === 'text' && !noKeyboard
   const latex = useMemo(() => toLatex(value), [value])
 
-  // ── Insertion logic (pure React state, no DOM hacks) ──
+  // When keyboard opens, put cursor at end of current value
+  useEffect(() => {
+    if (showKb) setCursor(value.length)
+  }, [showKb]) // eslint-disable-line
+
   function insert(snippet) {
     const mark  = snippet.indexOf('§')
     const clean = snippet.replace(/§/g, '')
@@ -52,8 +56,7 @@ export default function CalcInput({
   function moveCursor(dir) {
     setCursor(c => dir === 'left'
       ? Math.max(0, c - 1)
-      : Math.min(value.length, c + 1)
-    )
+      : Math.min(value.length, c + 1))
   }
 
   // Plain number inputs
@@ -73,13 +76,12 @@ export default function CalcInput({
     )
   }
 
-  // Display: rendered LaTeX if valid, else raw string with cursor marker
   const displayContent = () => {
     if (latex) return <BlockMath math={latex} />
-    if (!value) return <span className={styles.placeholder}>{placeholder || 'Tap to enter expression…'}</span>
-    // Show raw with cursor bar so user can see what they typed
-    const before = value.slice(0, Math.min(cursor, value.length))
-    const after  = value.slice(Math.min(cursor, value.length))
+    if (!value) return <span className={styles.placeholder}>{placeholder || 'Tap to enter…'}</span>
+    const pos    = Math.min(cursor, value.length)
+    const before = value.slice(0, pos)
+    const after  = value.slice(pos)
     return (
       <span className={styles.rawExpr}>
         {before}<span className={styles.cursor}>|</span>{after}
@@ -96,7 +98,6 @@ export default function CalcInput({
         onClick={() => setShowKb(true)}
         role="button"
         tabIndex={0}
-        onKeyDown={e => e.key === 'Enter' && setShowKb(true)}
       >
         {displayContent()}
       </div>
