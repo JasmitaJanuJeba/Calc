@@ -1,0 +1,14 @@
+{
+  "name": "AP BC Calc",
+  "short_name": "AP BC Calc",
+  "description": "AP Calculus BC Interactive Learning App",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#0d1123",
+  "theme_color": "#0d1123",
+  "icons": [
+    { "src": "logo-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "logo-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "logo.png",     "sizes": "1024x1024", "type": "image/png" }
+  ]
+}
