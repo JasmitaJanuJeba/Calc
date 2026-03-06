@@ -13,62 +13,50 @@
   letter-spacing: 0.06em;
 }
 
-/* ── Math display card ── */
+/* ── KaTeX preview (only shown when expression is valid) ── */
 .preview {
   background: #171c36;
   border: 1.5px solid rgba(255,255,255,0.08);
-  border-radius: 14px;
-  padding: 20px 28px;
-  min-height: 68px;
+  border-radius: 12px;
+  padding: 18px 24px;
+  min-height: 62px;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  transition: background 0.15s, border-color 0.15s;
+  cursor: text;
   text-align: center;
 }
-.preview:hover  { background: #1e2444; border-color: rgba(255,255,255,0.14); }
-.previewFocused { border-color: rgba(124,58,237,0.55); box-shadow: 0 0 0 3px rgba(124,58,237,0.12); }
-
-/* KaTeX rendered output */
-.preview :global(.katex) { font-size: 1.5rem !important; }
+.preview :global(.katex) { font-size: 1.45rem !important; }
 .preview :global(.katex-display) { margin: 0 !important; }
 
-/* Raw expression while still typing */
-.rawExpr {
-  font-size: 1.2rem;
-  font-family: 'JetBrains Mono', monospace;
-  color: #c8ccff;
-  letter-spacing: 0.03em;
-  word-break: break-all;
-}
-
-/* Blinking cursor */
-.cursor {
-  display: inline-block;
-  width: 2px;
-  color: #7c3aed;
-  font-weight: 300;
-  animation: blink 1s step-end infinite;
-}
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0; }
-}
-
-.placeholder {
-  font-size: 1rem;
-  color: rgba(200,200,255,0.3);
-  font-style: italic;
-}
-
-/* Plain number inputs */
-.inputPlain {
+/* ── Real text input — always visible ── */
+.textInput {
   background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.12);
+  border: 1.5px solid rgba(255,255,255,0.12);
   border-radius: 10px;
   padding: 10px 14px;
-  color: #f0f0ff;
+  color: #e8eaff;
+  font-size: 1rem;
+  font-family: 'JetBrains Mono', monospace;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+  caret-color: #a78bfa;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.textInput:focus,
+.textInputFocused {
+  border-color: rgba(124,58,237,0.65);
+  box-shadow: 0 0 0 3px rgba(124,58,237,0.12);
+}
+
+/* ── Plain number inputs ── */
+.inputPlain {
+  background: rgba(255,255,255,0.05);
+  border: 1.5px solid rgba(255,255,255,0.12);
+  border-radius: 10px;
+  padding: 10px 14px;
+  color: #e8eaff;
   font-size: 0.95rem;
   font-family: 'JetBrains Mono', monospace;
   outline: none;
@@ -77,8 +65,8 @@
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 .inputPlain:focus {
-  border-color: rgba(124,58,237,0.6);
-  box-shadow: 0 0 0 3px rgba(124,58,237,0.1);
+  border-color: rgba(124,58,237,0.65);
+  box-shadow: 0 0 0 3px rgba(124,58,237,0.12);
 }
 
 .hint {
@@ -86,7 +74,7 @@
   color: rgba(240,240,255,0.35);
 }
 
-/* Keyboard pinned to bottom */
+/* ── Keyboard pinned to viewport bottom ── */
 .keyboardAnchor {
   position: fixed;
   bottom: 0; left: 0; right: 0;
