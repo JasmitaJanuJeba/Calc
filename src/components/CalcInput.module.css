@@ -13,44 +13,86 @@
   letter-spacing: 0.06em;
 }
 
-/* ── KaTeX preview (only shown when expression is valid) ── */
-.preview {
+/* Off-screen real input — focusable, proper size so selectionStart works */
+.offscreen {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  width: 300px;
+  height: 40px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* KaTeX display card */
+.card {
   background: #171c36;
   border: 1.5px solid rgba(255,255,255,0.08);
-  border-radius: 12px;
-  padding: 18px 24px;
-  min-height: 62px;
+  border-radius: 14px;
+  padding: 20px 28px;
+  min-height: 68px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: text;
+  transition: border-color 0.15s, box-shadow 0.15s;
   text-align: center;
 }
-.preview :global(.katex) { font-size: 1.45rem !important; }
-.preview :global(.katex-display) { margin: 0 !important; }
-
-/* ── Real text input — always visible ── */
-.textInput {
-  background: rgba(255,255,255,0.05);
-  border: 1.5px solid rgba(255,255,255,0.12);
-  border-radius: 10px;
-  padding: 10px 14px;
-  color: #e8eaff;
-  font-size: 1rem;
-  font-family: 'JetBrains Mono', monospace;
-  outline: none;
-  width: 100%;
-  box-sizing: border-box;
-  caret-color: #a78bfa;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-.textInput:focus,
-.textInputFocused {
-  border-color: rgba(124,58,237,0.65);
+.card:hover { border-color: rgba(255,255,255,0.14); }
+.cardFocused {
+  border-color: rgba(124,58,237,0.6);
   box-shadow: 0 0 0 3px rgba(124,58,237,0.12);
 }
 
-/* ── Plain number inputs ── */
+/* KaTeX rendered math */
+.katexWrap { display: flex; align-items: center; gap: 4px; }
+.card :global(.katex) { font-size: 1.5rem !important; }
+.card :global(.katex-display) { margin: 0 !important; }
+
+/* Blinking cursor shown after rendered math */
+.mathCursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.6rem;
+  background: #a78bfa;
+  border-radius: 1px;
+  animation: blink 1s step-end infinite;
+  flex-shrink: 0;
+}
+
+/* Raw text while expression is incomplete */
+.rawExpr {
+  font-size: 1.1rem;
+  font-family: 'JetBrains Mono', monospace;
+  color: #c8ccff;
+  word-break: break-all;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0;
+}
+.rawCursor {
+  display: inline-block;
+  width: 2px;
+  height: 1.2em;
+  background: #a78bfa;
+  border-radius: 1px;
+  animation: blink 1s step-end infinite;
+  vertical-align: middle;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+.placeholder {
+  font-size: 1rem;
+  color: rgba(200,200,255,0.28);
+  font-style: italic;
+}
+
+/* Plain number inputs */
 .inputPlain {
   background: rgba(255,255,255,0.05);
   border: 1.5px solid rgba(255,255,255,0.12);
@@ -66,7 +108,7 @@
 }
 .inputPlain:focus {
   border-color: rgba(124,58,237,0.65);
-  box-shadow: 0 0 0 3px rgba(124,58,237,0.12);
+  box-shadow: 0 0 0 3px rgba(124,58,237,0.1);
 }
 
 .hint {
@@ -74,7 +116,6 @@
   color: rgba(240,240,255,0.35);
 }
 
-/* ── Keyboard pinned to viewport bottom ── */
 .keyboardAnchor {
   position: fixed;
   bottom: 0; left: 0; right: 0;

@@ -6,9 +6,11 @@ import styles from './CalcInput.module.css'
 import MathKeyboard from './MathKeyboard'
 
 function toLatex(expr) {
-  if (!expr || !expr.trim()) return null
+  if (expr == null) return null
+  const s = typeof expr === 'string' ? expr : String(expr)
+  if (!s.trim()) return null
   try {
-    return math.parse(expr).toTex({ parenthesis: 'auto' })
+    return math.parse(s).toTex({ parenthesis: 'auto' })
       .replace(/\{ /g, '{')
       .replace(/\\mathrm\{ln\}/g, '\\ln')
       .replace(/\\mathrm\{integrate\}/g, '\\int')
@@ -17,7 +19,6 @@ function toLatex(expr) {
   } catch { return null }
 }
 
-// Insert snippet into a real <input> using native setter so React's onChange fires
 function nativeInsert(el, snippet) {
   if (!el) return
   const start  = el.selectionStart ?? el.value.length
@@ -25,32 +26,26 @@ function nativeInsert(el, snippet) {
   const mark   = snippet.indexOf('§')
   const clean  = snippet.replace(/§/g, '')
   const newVal = el.value.slice(0, start) + clean + el.value.slice(end)
-  const cursor = mark >= 0 ? start + mark : start + clean.length
+  const cur    = mark >= 0 ? start + mark : start + clean.length
 
-  // Bypass React's synthetic onChange so the controlled input updates
   const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set
   setter.call(el, newVal)
   el.dispatchEvent(new Event('input', { bubbles: true }))
-
-  requestAnimationFrame(() => {
-    el.focus()
-    el.setSelectionRange(cursor, cursor)
-  })
+  requestAnimationFrame(() => { el.focus(); el.setSelectionRange(cur, cur) })
 }
 
 function nativeBackspace(el) {
   if (!el) return
-  const start = el.selectionStart
-  const end   = el.selectionEnd
+  const start = el.selectionStart, end = el.selectionEnd
   if (start === end && start === 0) return
   const newVal = start !== end
     ? el.value.slice(0, start) + el.value.slice(end)
     : el.value.slice(0, start - 1) + el.value.slice(start)
-  const cursor = start !== end ? start : Math.max(0, start - 1)
+  const cur = start !== end ? start : Math.max(0, start - 1)
   const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set
   setter.call(el, newVal)
   el.dispatchEvent(new Event('input', { bubbles: true }))
-  requestAnimationFrame(() => { el.focus(); el.setSelectionRange(cursor, cursor) })
+  requestAnimationFrame(() => { el.focus(); el.setSelectionRange(cur, cur) })
 }
 
 function nativeArrow(el, dir) {
@@ -66,17 +61,22 @@ export default function CalcInput({
   type = 'text', min, max, step,
   noKeyboard = false,
 }) {
-  const inputRef = useRef(null)
-  const [showKb, setShowKb] = useState(false)
+  const inputRef  = useRef(null)
+  const [showKb, setShowKb]   = useState(false)
+  const [curPos, setCurPos]   = useState(0)
 
   const useKb = type === 'text' && !noKeyboard
   const latex = useMemo(() => toLatex(value), [value])
 
-  const onInsert     = useCallback(s  => nativeInsert(inputRef.current, s),   [])
-  const onBackspace  = useCallback(()  => nativeBackspace(inputRef.current),   [])
-  const onArrow      = useCallback(dir => nativeArrow(inputRef.current, dir),  [])
+  const onInsert    = useCallback(s   => nativeInsert(inputRef.current, s),   [])
+  const onBackspace = useCallback(()  => nativeBackspace(inputRef.current),   [])
+  const onArrow     = useCallback(dir => nativeArrow(inputRef.current, dir),  [])
 
-  // Plain number inputs — unchanged
+  const syncCursor = () => {
+    const el = inputRef.current
+    if (el) setCurPos(el.selectionStart ?? el.value.length)
+  }
+
   if (!useKb) {
     return (
       <div className={styles.group}>
@@ -89,32 +89,61 @@ export default function CalcInput({
     )
   }
 
+  // What to show in the KaTeX card
+  const CardContent = () => {
+    if (!value) {
+      return <span className={styles.placeholder}>{placeholder || 'Tap to enter expression…'}</span>
+    }
+    if (latex) {
+      // Valid expression — show KaTeX + blinking cursor at end
+      return (
+        <span className={styles.katexWrap}>
+          <BlockMath math={latex} />
+          {showKb && <span className={styles.mathCursor} />}
+        </span>
+      )
+    }
+    // Partially typed / invalid — show raw text with cursor
+    const pos    = Math.min(curPos, value.length)
+    const before = value.slice(0, pos)
+    const after  = value.slice(pos)
+    return (
+      <span className={styles.rawExpr}>
+        {before}<span className={styles.rawCursor} />{after}
+      </span>
+    )
+  }
+
   return (
     <div className={styles.group}>
       {label && <label className={styles.label}>{label}</label>}
 
-      {/* KaTeX preview — shown when expression is valid */}
-      {latex && (
-        <div className={styles.preview} onClick={() => inputRef.current?.focus()}>
-          <BlockMath math={latex} />
-        </div>
-      )}
-
-      {/* Real visible input — always present, handles cursor natively */}
+      {/* Off-screen input — real dimensions so selectionStart works on iOS */}
       <input
         ref={inputRef}
-        className={`${styles.textInput} ${showKb ? styles.textInputFocused : ''}`}
+        className={styles.offscreen}
         type="text"
         value={value}
         onChange={e => onChange(e.target.value)}
-        placeholder={latex ? '' : (placeholder || 'Enter expression…')}
-        onFocus={() => setShowKb(true)}
+        onFocus={() => { setShowKb(true); syncCursor() }}
+        onSelect={syncCursor}
+        onKeyUp={syncCursor}
         autoComplete="off"
         autoCorrect="off"
         autoCapitalize="none"
         spellCheck="false"
         inputMode="none"
       />
+
+      {/* KaTeX display card — the only visible thing */}
+      <div
+        className={`${styles.card} ${showKb ? styles.cardFocused : ''}`}
+        onClick={() => inputRef.current?.focus()}
+        role="button"
+        tabIndex={0}
+      >
+        <CardContent />
+      </div>
 
       {hint && <p className={styles.hint}>{hint}</p>}
 
