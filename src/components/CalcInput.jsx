@@ -1,4 +1,4 @@
-import { useRef, useState, useMemo } from 'react'
+import { useState, useMemo } from 'react'
 import * as math from 'mathjs'
 import { BlockMath } from 'react-katex'
 import 'katex/dist/katex.min.css'
@@ -8,8 +8,7 @@ import MathKeyboard from './MathKeyboard'
 function toLatex(expr) {
   if (!expr || !expr.trim()) return null
   try {
-    const raw = math.parse(expr).toTex({ parenthesis: 'auto' })
-    return raw
+    return math.parse(expr).toTex({ parenthesis: 'auto' })
       .replace(/\{ /g, '{')
       .replace(/\\mathrm\{ln\}/g, '\\ln')
       .replace(/\\mathrm\{integrate\}/g, '\\int')
@@ -26,26 +25,45 @@ export default function CalcInput({
   noKeyboard = false,
   accentColor = '#f97316',
 }) {
-  const inputRef = useRef(null)
   const [showKb, setShowKb] = useState(false)
+  const [cursor, setCursor] = useState(0)
 
   const useKb = type === 'text' && !noKeyboard
-  const latex  = useMemo(() => toLatex(value), [value])
+  const latex = useMemo(() => toLatex(value), [value])
 
-  const openKb = () => {
-    setShowKb(true)
-    requestAnimationFrame(() => inputRef.current?.focus())
+  // ── Insertion logic (pure React state, no DOM hacks) ──
+  function insert(snippet) {
+    const mark  = snippet.indexOf('§')
+    const clean = snippet.replace(/§/g, '')
+    const pos   = Math.min(cursor, value.length)
+    const next  = value.slice(0, pos) + clean + value.slice(pos)
+    const nextC = mark >= 0 ? pos + mark : pos + clean.length
+    onChange(next)
+    setCursor(nextC)
   }
 
-  // Number/range inputs — keep plain
+  function backspace() {
+    const pos = Math.min(cursor, value.length)
+    if (pos === 0) return
+    onChange(value.slice(0, pos - 1) + value.slice(pos))
+    setCursor(pos - 1)
+  }
+
+  function moveCursor(dir) {
+    setCursor(c => dir === 'left'
+      ? Math.max(0, c - 1)
+      : Math.min(value.length, c + 1)
+    )
+  }
+
+  // Plain number inputs
   if (!useKb) {
     return (
       <div className={styles.group}>
         {label && <label className={styles.label}>{label}</label>}
         <input
           className={styles.inputPlain}
-          type={type}
-          value={value}
+          type={type} value={value}
           onChange={e => onChange(e.target.value)}
           placeholder={placeholder}
           min={min} max={max} step={step}
@@ -55,37 +73,32 @@ export default function CalcInput({
     )
   }
 
+  // Display: rendered LaTeX if valid, else raw string with cursor marker
+  const displayContent = () => {
+    if (latex) return <BlockMath math={latex} />
+    if (!value) return <span className={styles.placeholder}>{placeholder || 'Tap to enter expression…'}</span>
+    // Show raw with cursor bar so user can see what they typed
+    const before = value.slice(0, Math.min(cursor, value.length))
+    const after  = value.slice(Math.min(cursor, value.length))
+    return (
+      <span className={styles.rawExpr}>
+        {before}<span className={styles.cursor}>|</span>{after}
+      </span>
+    )
+  }
+
   return (
     <div className={styles.group}>
       {label && <label className={styles.label}>{label}</label>}
 
-      {/* Hidden input for value + cursor tracking */}
-      <input
-        ref={inputRef}
-        className={styles.hiddenInput}
-        type="text"
-        value={value}
-        onChange={e => onChange(e.target.value)}
-        autoComplete="off"
-        inputMode="none"
-        readOnly={showKb}
-      />
-
-      {/* ── Rendered math display card (always visible) ── */}
       <div
         className={`${styles.preview} ${showKb ? styles.previewFocused : ''}`}
-        style={{ borderLeftColor: accentColor, '--accent': accentColor }}
-        onClick={openKb}
+        onClick={() => setShowKb(true)}
         role="button"
         tabIndex={0}
-        onKeyDown={e => e.key === 'Enter' && openKb()}
-        title="Tap to edit"
+        onKeyDown={e => e.key === 'Enter' && setShowKb(true)}
       >
-        {latex ? (
-          <BlockMath math={latex} />
-        ) : (
-          <span className={styles.placeholder}>{placeholder || 'Enter expression…'}</span>
-        )}
+        {displayContent()}
       </div>
 
       {hint && <p className={styles.hint}>{hint}</p>}
@@ -93,8 +106,10 @@ export default function CalcInput({
       {showKb && (
         <div className={styles.keyboardAnchor}>
           <MathKeyboard
-            inputRef={inputRef}
-            onClose={() => { setShowKb(false); inputRef.current?.blur() }}
+            onInsert={insert}
+            onBackspace={backspace}
+            onArrow={moveCursor}
+            onClose={() => setShowKb(false)}
           />
         </div>
       )}

@@ -13,23 +13,13 @@
   letter-spacing: 0.06em;
 }
 
-/* ── Hidden real input (keeps value + cursor for keyboard) ── */
-.hiddenInput {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-}
-
 /* ── Math display card ── */
 .preview {
   background: #171c36;
   border: 1.5px solid rgba(255,255,255,0.08);
   border-radius: 14px;
-  padding: 22px 32px;
-  min-height: 72px;
+  padding: 20px 28px;
+  min-height: 68px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -37,41 +27,42 @@
   transition: background 0.15s, border-color 0.15s;
   text-align: center;
 }
-.preview:hover {
-  background: #1e2444;
-  border-color: rgba(255,255,255,0.15);
-}
-.previewFocused {
-  border-color: rgba(124,58,237,0.5);
-  box-shadow: 0 0 0 3px rgba(124,58,237,0.12);
+.preview:hover  { background: #1e2444; border-color: rgba(255,255,255,0.14); }
+.previewFocused { border-color: rgba(124,58,237,0.55); box-shadow: 0 0 0 3px rgba(124,58,237,0.12); }
+
+/* KaTeX rendered output */
+.preview :global(.katex) { font-size: 1.5rem !important; }
+.preview :global(.katex-display) { margin: 0 !important; }
+
+/* Raw expression while still typing */
+.rawExpr {
+  font-size: 1.2rem;
+  font-family: 'JetBrains Mono', monospace;
+  color: #c8ccff;
+  letter-spacing: 0.03em;
+  word-break: break-all;
 }
 
-/* KaTeX rendered math — large, white */
-.preview :global(.katex) {
-  font-size: 1.55rem !important;
-  color: #eef0ff !important;
+/* Blinking cursor */
+.cursor {
+  display: inline-block;
+  width: 2px;
+  color: #7c3aed;
+  font-weight: 300;
+  animation: blink 1s step-end infinite;
 }
-.preview :global(.katex-display) {
-  margin: 0 !important;
-}
-.preview :global(.katex .mord),
-.preview :global(.katex .mbin),
-.preview :global(.katex .mrel),
-.preview :global(.katex .mopen),
-.preview :global(.katex .mclose),
-.preview :global(.katex .mpunct),
-.preview :global(.katex .minner) {
-  color: #eef0ff !important;
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
 }
 
 .placeholder {
   font-size: 1rem;
   color: rgba(200,200,255,0.3);
   font-style: italic;
-  font-family: 'Inter', sans-serif;
 }
 
-/* ── Plain inputs (numbers, sliders) ── */
+/* Plain number inputs */
 .inputPlain {
   background: rgba(255,255,255,0.05);
   border: 1px solid rgba(255,255,255,0.12);
@@ -81,9 +72,9 @@
   font-size: 0.95rem;
   font-family: 'JetBrains Mono', monospace;
   outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
   width: 100%;
   box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 .inputPlain:focus {
   border-color: rgba(124,58,237,0.6);
@@ -95,11 +86,9 @@
   color: rgba(240,240,255,0.35);
 }
 
-/* ── Keyboard fixed to bottom of viewport ── */
+/* Keyboard pinned to bottom */
 .keyboardAnchor {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  bottom: 0; left: 0; right: 0;
   z-index: 9999;
 }
