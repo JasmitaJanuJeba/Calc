@@ -13,6 +13,32 @@
   letter-spacing: 0.06em;
 }
 
+/* ── Live math preview ── */
+.preview {
+  background: #171c36;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-left: 4px solid #f97316;
+  border-radius: 10px;
+  padding: 16px 20px;
+  cursor: pointer;
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+.preview:hover { background: #1e2444; }
+
+/* KaTeX inside preview: white text, larger */
+.preview :global(.katex) {
+  font-size: 1.5rem !important;
+  color: #f0f0ff;
+}
+.preview :global(.katex-display) {
+  margin: 0 !important;
+}
+
+/* ── Input row ── */
 .inputRow {
   display: flex;
   align-items: center;
@@ -31,7 +57,6 @@
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
-
 .input:focus,
 .inputActive {
   border-color: rgba(124,58,237,0.6);
@@ -45,23 +70,21 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(124,58,237,0.15);
-  border: 1px solid rgba(124,58,237,0.35);
+  background: rgba(249,115,22,0.1);
+  border: 1px solid rgba(249,115,22,0.35);
   border-radius: 8px;
-  color: rgba(180,140,255,0.9);
   font-size: 1.1rem;
   cursor: pointer;
   transition: background 0.15s;
 }
-.kbToggle:hover {
-  background: rgba(124,58,237,0.28);
-}
+.kbToggle:hover { background: rgba(249,115,22,0.22); }
 
 .hint {
   font-size: 0.75rem;
   color: rgba(240,240,255,0.35);
 }
 
+/* ── Keyboard fixed to bottom of viewport ── */
 .keyboardAnchor {
   position: fixed;
   bottom: 0;
