@@ -1,0 +1,215 @@
+.home {
+  min-height: 100vh;
+  padding: 40px 24px 60px;
+  position: relative;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 20% 10%, rgba(124,58,237,0.15) 0%, transparent 50%),
+              radial-gradient(ellipse at 80% 80%, rgba(6,182,212,0.1) 0%, transparent 50%),
+              #0a0a1a;
+}
+
+.particles {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(1px);
+}
+
+.hero {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto 60px;
+  position: relative;
+  z-index: 1;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7c3aed, #ec4899);
+  font-size: 36px;
+  font-weight: 900;
+  margin-bottom: 24px;
+  box-shadow: 0 0 40px rgba(124,58,237,0.5);
+}
+
+.title {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 900;
+  line-height: 1.1;
+  margin-bottom: 16px;
+  color: #f0f0ff;
+}
+
+.titleGradient {
+  background: linear-gradient(90deg, #a78bfa, #ec4899, #06b6d4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  background-size: 200% auto;
+  animation: gradient-shift 4s linear infinite;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: rgba(240,240,255,0.65);
+  line-height: 1.6;
+  margin-bottom: 28px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.stats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  font-size: 0.95rem;
+}
+
+.stat {
+  color: rgba(240,240,255,0.7);
+}
+
+.stat span {
+  font-weight: 700;
+  font-size: 1.2rem;
+  background: linear-gradient(90deg, #a78bfa, #ec4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.statDot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(240,240,255,0.3);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.card {
+  position: relative;
+  background: #12122a;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 20px;
+  overflow: hidden;
+  text-align: left;
+  padding: 0;
+  transition: border-color 0.3s;
+  cursor: pointer;
+}
+
+.card:hover {
+  border-color: var(--card-color, #7c3aed);
+  box-shadow: 0 0 30px rgba(var(--card-color-rgb, 124,58,237), 0.2);
+}
+
+.cardGlow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  opacity: 0.8;
+}
+
+.cardInner {
+  padding: 24px;
+}
+
+.unitBadge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(240,240,255,0.4);
+  margin-bottom: 12px;
+}
+
+.cardEmoji {
+  font-size: 2rem;
+  font-weight: 900;
+  margin-bottom: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  background: linear-gradient(135deg, var(--card-color, #7c3aed), #fff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.cardTitle {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #f0f0ff;
+  margin-bottom: 8px;
+}
+
+.cardDesc {
+  font-size: 0.85rem;
+  color: rgba(240,240,255,0.55);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.subtopics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.subtopic {
+  font-size: 0.72rem;
+  padding: 3px 8px;
+  border-radius: 20px;
+  border: 1px solid;
+  font-weight: 500;
+}
+
+.cardArrow {
+  font-size: 0.9rem;
+  font-weight: 600;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+
+.card:hover .cardArrow {
+  opacity: 1;
+}
+
+.footer {
+  text-align: center;
+  margin-top: 60px;
+  color: rgba(240,240,255,0.3);
+  font-size: 0.85rem;
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}

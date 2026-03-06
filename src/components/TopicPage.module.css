@@ -1,0 +1,119 @@
+.page {
+  min-height: 100vh;
+  background: #0a0a1a;
+}
+
+.header {
+  position: relative;
+  overflow: hidden;
+  padding: 24px 24px 0;
+}
+
+.headerBg {
+  position: absolute;
+  inset: 0;
+  opacity: 0.12;
+}
+
+.headerContent {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto 20px;
+}
+
+.backBtn {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(240,240,255,0.8);
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  margin-bottom: 16px;
+}
+
+.backBtn:hover {
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+}
+
+.topicInfo {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.topicEmoji {
+  font-size: 2.5rem;
+  font-weight: 900;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--color);
+}
+
+.unitLabel {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(240,240,255,0.4);
+  margin-bottom: 4px;
+}
+
+.topicTitle {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #f0f0ff;
+}
+
+.tabs {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 16px;
+  max-width: 1200px;
+  margin: 0 auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.tabs::-webkit-scrollbar { display: none; }
+
+.tab {
+  flex-shrink: 0;
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.04);
+  color: rgba(240,240,255,0.6);
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.tab:hover {
+  background: rgba(255,255,255,0.08);
+  color: #f0f0ff;
+}
+
+.tabActive {
+  background: var(--tab-color, #7c3aed) !important;
+  color: #fff !important;
+  border-color: transparent !important;
+  box-shadow: 0 0 16px rgba(124,58,237,0.4);
+}
+
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.placeholder {
+  text-align: center;
+  padding: 80px 20px;
+  color: rgba(240,240,255,0.4);
+}
