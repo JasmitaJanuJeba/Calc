@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+  position: relative;
 }
 
 .label {
@@ -12,7 +13,14 @@
   letter-spacing: 0.06em;
 }
 
+.inputRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .input {
+  flex: 1;
   background: rgba(255,255,255,0.05);
   border: 1px solid rgba(255,255,255,0.12);
   border-radius: 10px;
@@ -24,12 +32,40 @@
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.input:focus {
+.input:focus,
+.inputActive {
   border-color: rgba(124,58,237,0.6);
   box-shadow: 0 0 0 3px rgba(124,58,237,0.1);
+}
+
+.kbToggle {
+  flex: 0 0 auto;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(124,58,237,0.15);
+  border: 1px solid rgba(124,58,237,0.35);
+  border-radius: 8px;
+  color: rgba(180,140,255,0.9);
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.kbToggle:hover {
+  background: rgba(124,58,237,0.28);
 }
 
 .hint {
   font-size: 0.75rem;
   color: rgba(240,240,255,0.35);
+}
+
+.keyboardAnchor {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
 }
