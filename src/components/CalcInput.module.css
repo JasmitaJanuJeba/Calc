@@ -13,40 +13,66 @@
   letter-spacing: 0.06em;
 }
 
-/* ── Live math preview ── */
+/* ── Hidden real input (keeps value + cursor for keyboard) ── */
+.hiddenInput {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* ── Math display card ── */
 .preview {
   background: #171c36;
-  border: 1px solid rgba(255,255,255,0.1);
-  border-left: 4px solid #f97316;
-  border-radius: 10px;
-  padding: 16px 20px;
-  cursor: pointer;
-  min-height: 58px;
+  border: 1.5px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  padding: 22px 32px;
+  min-height: 72px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.15s;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  text-align: center;
 }
-.preview:hover { background: #1e2444; }
+.preview:hover {
+  background: #1e2444;
+  border-color: rgba(255,255,255,0.15);
+}
+.previewFocused {
+  border-color: rgba(124,58,237,0.5);
+  box-shadow: 0 0 0 3px rgba(124,58,237,0.12);
+}
 
-/* KaTeX inside preview: white text, larger */
+/* KaTeX rendered math — large, white */
 .preview :global(.katex) {
-  font-size: 1.5rem !important;
-  color: #f0f0ff;
+  font-size: 1.55rem !important;
+  color: #eef0ff !important;
 }
 .preview :global(.katex-display) {
   margin: 0 !important;
 }
-
-/* ── Input row ── */
-.inputRow {
-  display: flex;
-  align-items: center;
-  gap: 6px;
+.preview :global(.katex .mord),
+.preview :global(.katex .mbin),
+.preview :global(.katex .mrel),
+.preview :global(.katex .mopen),
+.preview :global(.katex .mclose),
+.preview :global(.katex .mpunct),
+.preview :global(.katex .minner) {
+  color: #eef0ff !important;
 }
 
-.input {
-  flex: 1;
+.placeholder {
+  font-size: 1rem;
+  color: rgba(200,200,255,0.3);
+  font-style: italic;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ── Plain inputs (numbers, sliders) ── */
+.inputPlain {
   background: rgba(255,255,255,0.05);
   border: 1px solid rgba(255,255,255,0.12);
   border-radius: 10px;
@@ -56,28 +82,13 @@
   font-family: 'JetBrains Mono', monospace;
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%;
+  box-sizing: border-box;
 }
-.input:focus,
-.inputActive {
+.inputPlain:focus {
   border-color: rgba(124,58,237,0.6);
   box-shadow: 0 0 0 3px rgba(124,58,237,0.1);
 }
-
-.kbToggle {
-  flex: 0 0 auto;
-  width: 38px;
-  height: 38px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(249,115,22,0.1);
-  border: 1px solid rgba(249,115,22,0.35);
-  border-radius: 8px;
-  font-size: 1.1rem;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-.kbToggle:hover { background: rgba(249,115,22,0.22); }
 
 .hint {
   font-size: 0.75rem;

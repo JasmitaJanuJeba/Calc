@@ -9,13 +9,12 @@ function toLatex(expr) {
   if (!expr || !expr.trim()) return null
   try {
     const raw = math.parse(expr).toTex({ parenthesis: 'auto' })
-    // Clean up mathjs's toTex quirks
     return raw
       .replace(/\{ /g, '{')
-      .replace(/\mathrm\{ln\}/g, '\\ln')
-      .replace(/\mathrm\{integrate\}/g, '\\int')
-      .replace(/\mathrm\{derivative\}/g, "\\frac{d}{dx}")
-      .replace(/\mathrm\{limit\}/g, '\\lim')
+      .replace(/\\mathrm\{ln\}/g, '\\ln')
+      .replace(/\\mathrm\{integrate\}/g, '\\int')
+      .replace(/\\mathrm\{derivative\}/g, '\\frac{d}{dx}')
+      .replace(/\\mathrm\{limit\}/g, '\\lim')
   } catch {
     return null
   }
@@ -25,71 +24,73 @@ export default function CalcInput({
   label, value, onChange, placeholder, hint,
   type = 'text', min, max, step,
   noKeyboard = false,
-  accentColor = '#f97316',  // orange by default
+  accentColor = '#f97316',
 }) {
   const inputRef = useRef(null)
   const [showKb, setShowKb] = useState(false)
 
-  const useKb  = type === 'text' && !noKeyboard
+  const useKb = type === 'text' && !noKeyboard
   const latex  = useMemo(() => toLatex(value), [value])
-  const showPreview = useKb && value && latex
 
   const openKb = () => {
-    if (!useKb) return
     setShowKb(true)
     requestAnimationFrame(() => inputRef.current?.focus())
+  }
+
+  // Number/range inputs — keep plain
+  if (!useKb) {
+    return (
+      <div className={styles.group}>
+        {label && <label className={styles.label}>{label}</label>}
+        <input
+          className={styles.inputPlain}
+          type={type}
+          value={value}
+          onChange={e => onChange(e.target.value)}
+          placeholder={placeholder}
+          min={min} max={max} step={step}
+        />
+        {hint && <p className={styles.hint}>{hint}</p>}
+      </div>
+    )
   }
 
   return (
     <div className={styles.group}>
       {label && <label className={styles.label}>{label}</label>}
 
-      {/* ── Math preview card (shown when there's a valid expression) ── */}
-      {showPreview && (
-        <div
-          className={styles.preview}
-          style={{ borderLeftColor: accentColor }}
-          onClick={openKb}
-          title="Tap to edit"
-        >
-          <BlockMath math={latex} />
-        </div>
-      )}
+      {/* Hidden input for value + cursor tracking */}
+      <input
+        ref={inputRef}
+        className={styles.hiddenInput}
+        type="text"
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        autoComplete="off"
+        inputMode="none"
+        readOnly={showKb}
+      />
 
-      {/* ── Input row ── */}
-      <div className={styles.inputRow}>
-        <input
-          ref={inputRef}
-          className={`${styles.input} ${useKb && showKb ? styles.inputActive : ''}`}
-          type={type}
-          value={value}
-          onChange={e => onChange(e.target.value)}
-          placeholder={placeholder}
-          min={min}
-          max={max}
-          step={step}
-          onFocus={() => useKb && setShowKb(true)}
-          autoComplete="off"
-          autoCorrect="off"
-          autoCapitalize="none"
-          spellCheck="false"
-          inputMode={useKb ? 'none' : undefined}
-        />
-        {useKb && (
-          <button
-            className={styles.kbToggle}
-            style={{ borderColor: accentColor + '60', color: accentColor }}
-            onMouseDown={e => { e.preventDefault(); setShowKb(v => !v) }}
-            title="Math keyboard"
-          >
-            ∫
-          </button>
+      {/* ── Rendered math display card (always visible) ── */}
+      <div
+        className={`${styles.preview} ${showKb ? styles.previewFocused : ''}`}
+        style={{ borderLeftColor: accentColor, '--accent': accentColor }}
+        onClick={openKb}
+        role="button"
+        tabIndex={0}
+        onKeyDown={e => e.key === 'Enter' && openKb()}
+        title="Tap to edit"
+      >
+        {latex ? (
+          <BlockMath math={latex} />
+        ) : (
+          <span className={styles.placeholder}>{placeholder || 'Enter expression…'}</span>
         )}
       </div>
 
       {hint && <p className={styles.hint}>{hint}</p>}
 
-      {showKb && useKb && (
+      {showKb && (
         <div className={styles.keyboardAnchor}>
           <MathKeyboard
             inputRef={inputRef}
