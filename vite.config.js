@@ -10,7 +10,6 @@ export default defineConfig({
       output: {
         manualChunks: {
           'plotly': ['plotly.js-dist-min', 'react-plotly.js'],
-          'three': ['three', '@react-three/fiber', '@react-three/drei'],
           'math': ['mathjs'],
           'katex': ['katex', 'react-katex'],
           'framer': ['framer-motion'],

@@ -1,10 +1,21 @@
 import { useState, useMemo } from 'react'
+import * as math from 'mathjs'
 import GraphPanel from '../components/GraphPanel'
 import StepByStep from '../components/StepByStep'
 import CalcInput from '../components/CalcInput'
 import { generatePoints, evaluateExpression, formatNumber } from '../utils/mathHelpers'
 import { BlockMath } from 'react-katex'
 import styles from './Topic.module.css'
+
+function evalDE(expr, xVal, yVal) {
+  try {
+    const result = math.evaluate(expr, { x: xVal, y: yVal })
+    if (typeof result === 'number' && isFinite(result)) return result
+    return null
+  } catch {
+    return null
+  }
+}
 
 const SUBTOPICS = [SeparableEq, SlopeFields, EulersMethod, ExpGrowth, LogisticGrowth, GeneralSolutions]
 
@@ -114,10 +125,7 @@ function SlopeFields({ color }) {
     for (let x = -3; x <= 3; x += 0.5) {
       for (let y = -3; y <= 3; y += 0.5) {
         try {
-          const slope = evaluateExpression(deExpr, x) - (deExpr.includes('y') ? y * evaluateExpression(deExpr.replace(/[xy]/g, m => m === 'x' ? '0' : '1'), x) : 0)
-          const slope2 = (() => {
-            try { return eval(deExpr.replace('x', `(${x})`).replace('y', `(${y})`)) } catch { return 0 }
-          })()
+          const slope2 = evalDE(deExpr, x, y) ?? 0
           const len = 0.25 / Math.sqrt(1 + slope2 * slope2)
           if (isFinite(slope2) && !isNaN(slope2)) {
             arrows.x.push(x - len)
@@ -137,27 +145,23 @@ function SlopeFields({ color }) {
     let x = 0, y = y0
     const h = 0.05
     for (let i = 0; i < 120; i++) {
-      try {
-        const slope = eval(deExpr.replace(/\bx\b/g, `(${x})`).replace(/\by\b/g, `(${y})`))
-        if (!isFinite(slope) || isNaN(slope)) break
-        y += slope * h
-        x += h
-        if (Math.abs(y) < 10) pts.push([x, y])
-        else break
-      } catch { break }
+      const slope = evalDE(deExpr, x, y)
+      if (slope === null || !isFinite(slope) || isNaN(slope)) break
+      y += slope * h
+      x += h
+      if (Math.abs(y) < 10) pts.push([x, y])
+      else break
     }
     // Backwards
     x = 0; y = y0
     const back = [[0, y0]]
     for (let i = 0; i < 60; i++) {
-      try {
-        const slope = eval(deExpr.replace(/\bx\b/g, `(${x})`).replace(/\by\b/g, `(${y})`))
-        if (!isFinite(slope) || isNaN(slope)) break
-        y -= slope * h
-        x -= h
-        if (Math.abs(y) < 10) back.push([x, y])
-        else break
-      } catch { break }
+      const slope = evalDE(deExpr, x, y)
+      if (slope === null || !isFinite(slope) || isNaN(slope)) break
+      y -= slope * h
+      x -= h
+      if (Math.abs(y) < 10) back.push([x, y])
+      else break
     }
     const all = [...back.slice(1).reverse(), ...pts]
     return { xs: all.map(p => p[0]), ys: all.map(p => p[1]) }
@@ -228,20 +232,18 @@ function EulersMethod({ color }) {
     const pts = [{ x: x0, y: y0s, dy: null }]
     let x = x0, y = y0s
     for (let i = 0; i < steps2; i++) {
-      try {
-        const dy = eval(deExpr.replace(/\bx\b/g, `(${x})`).replace(/\by\b/g, `(${y})`))
-        if (!isFinite(dy)) break
-        const yn = y + dy * h
-        pts.push({ x: parseFloat((x + h).toFixed(6)), y: parseFloat(yn.toFixed(6)), dy: parseFloat(dy.toFixed(4)) })
-        x = x + h; y = yn
-      } catch { break }
+      const dy = evalDE(deExpr, x, y)
+      if (dy === null || !isFinite(dy)) break
+      const yn = y + dy * h
+      pts.push({ x: parseFloat((x + h).toFixed(6)), y: parseFloat(yn.toFixed(6)), dy: parseFloat(dy.toFixed(4)) })
+      x = x + h; y = yn
     }
     return pts
   }, [deExpr, x0, y0s, h, steps2])
 
   const stepsData = [
     { title: 'Euler\'s Method Formula', formula: 'y_{n+1} = y_n + h \\cdot f(x_n, y_n)', note: "A numerical approximation — useful when we can't solve the DE analytically!" },
-    { title: 'Step 1', formula: `y_1 = y_0 + h \\cdot f(${x0}, ${y0s}) = ${y0s} + ${h} \\cdot ${formatNumber(eulerPts[0] ? eval(deExpr.replace(/\bx\b/g,'('+x0+')').replace(/\by\b/g,'('+y0s+')')) : 0, 3)} = ${eulerPts[1]?.y ?? '...'}` },
+    { title: 'Step 1', formula: `y_1 = y_0 + h \\cdot f(${x0}, ${y0s}) = ${y0s} + ${h} \\cdot ${formatNumber(evalDE(deExpr, x0, y0s) ?? 0, 3)} = ${eulerPts[1]?.y ?? '...'}` },
     { title: 'Repeat', text: 'Continue applying the formula for each step.' },
     { title: 'Accuracy', text: 'Smaller h = more accurate but more steps.', note: 'Error is approximately O(h) per step.' }
   ]
