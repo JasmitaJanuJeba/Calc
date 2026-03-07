@@ -137,10 +137,14 @@ export default function MathKeyboard({ onInsert, onBackspace, onArrow, onClose }
   const [tab, setTab] = useState('nums')
   const rows = KEYS[tab] || []
 
-  // Use onClick only — touch-action:manipulation in CSS removes the 300ms
-  // delay without causing double-fire (onMouseDown+onTouchStart both fire on iOS)
+  // Prevent any keyboard button from stealing focus from the off-screen input.
+  // onMouseDown preventDefault stops focus transfer on both desktop and mobile
+  // (mobile fires mousedown as part of the tap sequence, before click).
+  // onClick is still used for the action — no double-fire risk.
+  const stopFocusTheft = e => e.preventDefault()
+
   return (
-    <div className={styles.keyboard}>
+    <div className={styles.keyboard} onMouseDown={stopFocusTheft}>
       <div className={styles.tabs}>
         {TABS.map(t => (
           <button

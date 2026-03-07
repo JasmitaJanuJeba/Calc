@@ -31,7 +31,12 @@ function nativeInsert(el, snippet) {
   const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set
   setter.call(el, newVal)
   el.dispatchEvent(new Event('input', { bubbles: true }))
-  requestAnimationFrame(() => { el.focus(); el.setSelectionRange(cur, cur) })
+  requestAnimationFrame(() => {
+    el.focus()
+    el.setSelectionRange(cur, cur)
+    // Fire 'select' so React's onSelect handler updates curPos for the raw cursor display
+    el.dispatchEvent(new Event('select', { bubbles: true }))
+  })
 }
 
 function nativeBackspace(el) {
@@ -45,7 +50,11 @@ function nativeBackspace(el) {
   const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set
   setter.call(el, newVal)
   el.dispatchEvent(new Event('input', { bubbles: true }))
-  requestAnimationFrame(() => { el.focus(); el.setSelectionRange(cur, cur) })
+  requestAnimationFrame(() => {
+    el.focus()
+    el.setSelectionRange(cur, cur)
+    el.dispatchEvent(new Event('select', { bubbles: true }))
+  })
 }
 
 function nativeArrow(el, dir) {
@@ -53,7 +62,11 @@ function nativeArrow(el, dir) {
   const pos = dir === 'left'
     ? Math.max(0, el.selectionStart - 1)
     : Math.min(el.value.length, el.selectionEnd + 1)
-  requestAnimationFrame(() => { el.focus(); el.setSelectionRange(pos, pos) })
+  requestAnimationFrame(() => {
+    el.focus()
+    el.setSelectionRange(pos, pos)
+    el.dispatchEvent(new Event('select', { bubbles: true }))
+  })
 }
 
 export default function CalcInput({
