@@ -9,6 +9,7 @@ import AppIntegralsTopic from '../topics/AppIntegralsTopic'
 import DiffEqTopic from '../topics/DiffEqTopic'
 import ParametricTopic from '../topics/ParametricTopic'
 import SeriesTopic from '../topics/SeriesTopic'
+import PracticePage from './PracticePage'
 
 const TOPIC_COMPONENTS = {
   limits: LimitsTopic,
@@ -20,6 +21,8 @@ const TOPIC_COMPONENTS = {
   parametric: ParametricTopic,
   series: SeriesTopic,
 }
+
+const PRACTICE_IDX = 'practice'
 
 export default function TopicPage({ topic, onBack }) {
   const [activeSubtopic, setActiveSubtopic] = useState(0)
@@ -57,6 +60,16 @@ export default function TopicPage({ topic, onBack }) {
               {sub}
             </motion.button>
           ))}
+          {/* Practice tab */}
+          <motion.button
+            className={`${styles.tab} ${styles.practiceTab} ${activeSubtopic === PRACTICE_IDX ? styles.tabActive : ''}`}
+            onClick={() => setActiveSubtopic(PRACTICE_IDX)}
+            style={{ '--tab-color': topic.color }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.96 }}
+          >
+            ✏️ Practice
+          </motion.button>
         </div>
       </div>
 
@@ -70,7 +83,9 @@ export default function TopicPage({ topic, onBack }) {
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.3 }}
         >
-          {TopicComponent ? (
+          {activeSubtopic === PRACTICE_IDX ? (
+            <PracticePage topic={topic} />
+          ) : TopicComponent ? (
             <TopicComponent
               subtopicIndex={activeSubtopic}
               subtopic={topic.subtopics[activeSubtopic]}

@@ -188,6 +188,12 @@
   font-weight: 500;
 }
 
+.cardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .cardArrow {
   font-size: 0.9rem;
   font-weight: 600;
@@ -197,6 +203,36 @@
 
 .card:hover .cardArrow {
   opacity: 1;
+}
+
+.solvedBadge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  opacity: 0.7;
+}
+
+/* ── Mastery styles ── */
+.cardMastered {
+  border-color: rgba(251,191,36,0.35) !important;
+}
+
+.masteredGlow {
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(251,191,36,0.12) 0%, transparent 65%);
+  pointer-events: none;
+  animation: goldenPulse 3s ease-in-out infinite;
+}
+
+.crown {
+  margin-right: 6px;
+  font-style: normal;
+}
+
+@keyframes goldenPulse {
+  0%, 100% { opacity: 0.7; }
+  50%       { opacity: 1; }
 }
 
 .footer {

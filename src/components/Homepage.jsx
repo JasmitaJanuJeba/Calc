@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { TOPICS } from '../data/topics'
+import { loadProgress } from '../utils/progress'
 import styles from './Homepage.module.css'
 
 const PARTICLES = Array.from({ length: 20 }, (_, i) => ({
@@ -13,6 +14,7 @@ const PARTICLES = Array.from({ length: 20 }, (_, i) => ({
 }))
 
 export default function Homepage({ onSelectTopic }) {
+  const progress = loadProgress()
   return (
     <div className={styles.home}>
       {/* Animated background particles */}
@@ -83,10 +85,13 @@ export default function Homepage({ onSelectTopic }) {
           show: { transition: { staggerChildren: 0.08 } }
         }}
       >
-        {TOPICS.map((topic, i) => (
+        {TOPICS.map((topic, i) => {
+          const mastered = progress[topic.id]?.mastered
+          const solved = progress[topic.id]?.totalSolved || 0
+          return (
           <motion.button
             key={topic.id}
-            className={styles.card}
+            className={`${styles.card} ${mastered ? styles.cardMastered : ''}`}
             onClick={() => onSelectTopic(topic)}
             variants={{
               hidden: { opacity: 0, y: 40, scale: 0.9 },
@@ -97,11 +102,15 @@ export default function Homepage({ onSelectTopic }) {
             transition={{ duration: 0.3 }}
             style={{ '--card-color': topic.color }}
           >
+            {mastered && <div className={styles.masteredGlow} />}
             <div className={styles.cardGlow} style={{ background: topic.gradient }} />
             <div className={styles.cardInner}>
               <div className={styles.unitBadge}>Unit {topic.unit}</div>
               <div className={styles.cardEmoji}>{topic.emoji}</div>
-              <h3 className={styles.cardTitle}>{topic.name}</h3>
+              <h3 className={styles.cardTitle}>
+                {mastered && <span className={styles.crown}>👑</span>}
+                {topic.name}
+              </h3>
               <p className={styles.cardDesc}>{topic.description}</p>
               <div className={styles.subtopics}>
                 {topic.subtopics.slice(0, 3).map(s => (
@@ -115,12 +124,20 @@ export default function Homepage({ onSelectTopic }) {
                   </span>
                 )}
               </div>
-              <div className={styles.cardArrow} style={{ color: topic.color }}>
-                Explore →
+              <div className={styles.cardFooter}>
+                <div className={styles.cardArrow} style={{ color: topic.color }}>
+                  Explore →
+                </div>
+                {solved > 0 && (
+                  <span className={styles.solvedBadge} style={{ color: topic.color }}>
+                    {solved} solved
+                  </span>
+                )}
               </div>
             </div>
           </motion.button>
-        ))}
+          )
+        })}
       </motion.div>
 
       <motion.div

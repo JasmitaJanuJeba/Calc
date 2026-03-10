@@ -1,0 +1,296 @@
+.page {
+  max-width: 760px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-bottom: 60px;
+}
+
+.empty {
+  text-align: center;
+  padding: 80px 24px;
+  color: rgba(240,240,255,0.4);
+  font-size: 1rem;
+}
+
+/* ── Progress strip ── */
+.progressStrip {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #0e0e22;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 14px;
+  padding: 14px 20px;
+}
+
+.progressLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.solvedCount {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: rgba(240,240,255,0.7);
+}
+
+.masteredBadge {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #fbbf24;
+  background: rgba(251,191,36,0.12);
+  border: 1px solid rgba(251,191,36,0.3);
+  border-radius: 20px;
+  padding: 3px 10px;
+}
+
+.streakInfo {
+  font-size: 0.82rem;
+  color: rgba(240,240,255,0.45);
+}
+
+.streakBarWrap {
+  flex: 1;
+  height: 6px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.streakBarFill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+/* ── Problem card ── */
+.card {
+  background: #12122a;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.questionBlock {
+  padding: 28px 28px 24px;
+  border-bottom: 1px solid;
+}
+
+.questionText {
+  font-size: 0.9rem;
+  color: rgba(240,240,255,0.55);
+  margin-bottom: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+}
+
+.mathDisplay {
+  font-size: 1.15rem;
+  color: #f0f0ff;
+}
+
+.mathDisplay .katex-display {
+  margin: 0;
+}
+
+/* ── Answer block ── */
+.answerBlock {
+  padding: 22px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.answerLabel {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(240,240,255,0.4);
+}
+
+.btnRow {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.checkBtn {
+  padding: 11px 24px;
+  border-radius: 10px;
+  border: none;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  transition: filter 0.15s, transform 0.1s;
+  letter-spacing: 0.03em;
+}
+.checkBtn:hover:not(:disabled) { filter: brightness(1.15); }
+.checkBtn:active:not(:disabled) { transform: scale(0.97); }
+.checkBtn:disabled { opacity: 0.4; cursor: default; }
+
+.hintBtn {
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.04);
+  color: rgba(240,240,255,0.65);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.hintBtn:hover { background: rgba(255,255,255,0.09); color: #f0f0ff; }
+
+/* ── Result banners ── */
+.resultCorrect,
+.resultWrong {
+  margin: 0 28px 22px;
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.resultCorrect {
+  background: rgba(16,185,129,0.1);
+  border: 1px solid rgba(16,185,129,0.3);
+}
+
+.resultWrong {
+  background: rgba(239,68,68,0.1);
+  border: 1px solid rgba(239,68,68,0.3);
+}
+
+.resultIcon {
+  font-size: 1.4rem;
+  font-weight: 900;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.resultCorrect .resultIcon { color: #10b981; }
+.resultWrong  .resultIcon { color: #ef4444; }
+
+.resultTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #f0f0ff;
+  margin-bottom: 4px;
+}
+
+.resultSub {
+  font-size: 0.85rem;
+  color: rgba(240,240,255,0.6);
+}
+
+.retryRow {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.retryBtn {
+  padding: 8px 18px;
+  border-radius: 8px;
+  border: 1px solid rgba(239,68,68,0.4);
+  background: rgba(239,68,68,0.12);
+  color: #f87171;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.retryBtn:hover { background: rgba(239,68,68,0.2); }
+
+/* ── Next button ── */
+.nextBtn {
+  display: block;
+  width: calc(100% - 56px);
+  margin: 0 28px 22px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--color, #7c3aed);
+  background: transparent;
+  color: var(--color, #7c3aed);
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  transition: background 0.15s;
+}
+.nextBtn:hover { background: rgba(255,255,255,0.04); }
+
+/* ── Hints panel ── */
+.hintsPanel {
+  background: #0e0e22;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 18px;
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.hintsPanelTitle {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(240,240,255,0.35);
+  margin-bottom: 4px;
+}
+
+.hintStep {
+  border-left: 3px solid;
+  padding-left: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.hintTitle {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #f0f0ff;
+}
+
+.hintBody {
+  font-size: 0.875rem;
+  color: rgba(240,240,255,0.6);
+  line-height: 1.5;
+}
+
+.hintFormula {
+  background: #12122a;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-top: 4px;
+  overflow-x: auto;
+}
+
+.hintFormula .katex-display {
+  margin: 0;
+}
+
+.nextStepBtn {
+  align-self: flex-start;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid;
+  background: transparent;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.nextStepBtn:hover { background: rgba(255,255,255,0.04); }
