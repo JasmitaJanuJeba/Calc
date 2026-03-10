@@ -1,23 +1,58 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { BlockMath } from 'react-katex'
 import 'katex/dist/katex.min.css'
 import CalcInput from './CalcInput'
 import styles from './PracticePage.module.css'
 import { PROBLEMS } from '../data/problems'
+import { GENERATORS } from '../data/generators'
 import { getSection, recordSolve } from '../utils/progress'
 
-function pickRandom(arr, exclude) {
-  if (arr.length === 0) return 0
-  if (arr.length === 1) return 0
-  let idx
-  do { idx = Math.floor(Math.random() * arr.length) } while (idx === exclude)
-  return idx
+// Build a shuffled batch of unseen problems: static first, then generated
+function buildBatch(topicId, seenSet) {
+  const gens = GENERATORS[topicId] || []
+  const batch = []
+
+  // Add all unseen static problems
+  const staticPool = PROBLEMS[topicId] || []
+  staticPool.forEach(p => {
+    if (!seenSet.has(p.id)) {
+      seenSet.add(p.id)
+      batch.push(p)
+    }
+  })
+
+  // Fill up to ~20 problems using generators
+  const target = Math.max(20, batch.length + 10)
+  let tries = 0
+  while (batch.length < target && gens.length > 0 && tries < gens.length * 25) {
+    tries++
+    const p = gens[Math.floor(Math.random() * gens.length)]()
+    if (p && !seenSet.has(p.id)) {
+      seenSet.add(p.id)
+      batch.push(p)
+    }
+  }
+
+  // Shuffle
+  for (let i = batch.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[batch[i], batch[j]] = [batch[j], batch[i]]
+  }
+  return batch
 }
 
 export default function PracticePage({ topic }) {
-  const problems = PROBLEMS[topic.id] || []
-  const [idx, setIdx] = useState(() => Math.floor(Math.random() * Math.max(problems.length, 1)))
+  const seenIds = useRef(new Set())
+  const queueRef = useRef([])
+  const [nonce, setNonce] = useState(0) // drives AnimatePresence key
+
+  const [currentProblem, setCurrentProblem] = useState(() => {
+    const batch = buildBatch(topic.id, seenIds.current)
+    queueRef.current = batch.slice(1)
+    return batch[0] || null
+  })
+
   const [answer, setAnswer] = useState('')
   const [submitted, setSubmitted] = useState(false)
   const [correct, setCorrect] = useState(false)
@@ -27,23 +62,39 @@ export default function PracticePage({ topic }) {
   const [section, setSection] = useState(() => getSection(topic.id))
   const [showSolution, setShowSolution] = useState(false)
 
-  const problem = problems[idx]
+  const advanceProblem = useCallback(() => {
+    // Refill when queue is running low
+    if (queueRef.current.length < 5) {
+      const more = buildBatch(topic.id, seenIds.current)
+      if (more.length === 0) {
+        // All generators exhausted — reset and start fresh
+        seenIds.current.clear()
+        const fresh = buildBatch(topic.id, seenIds.current)
+        queueRef.current = [...queueRef.current, ...fresh]
+      } else {
+        queueRef.current = [...queueRef.current, ...more]
+      }
+    }
+    const next = queueRef.current.shift()
+    setCurrentProblem(next || null)
+    setNonce(n => n + 1)
+  }, [topic.id])
 
   const handleCheck = useCallback(() => {
-    if (!answer.trim() || submitted) return
+    if (!answer.trim() || submitted || !currentProblem) return
     const newAttempts = attempts + 1
     setAttempts(newAttempts)
-    const isCorrect = problem.check(answer)
+    const isCorrect = currentProblem.check(answer)
     setCorrect(isCorrect)
     setSubmitted(true)
     if (isCorrect) {
       const clean = newAttempts === 1 && !hintsUsed
       setSection(recordSolve(topic.id, clean))
     }
-  }, [answer, submitted, attempts, problem, hintsUsed, topic.id])
+  }, [answer, submitted, attempts, currentProblem, hintsUsed, topic.id])
 
   const handleNext = useCallback(() => {
-    setIdx(i => pickRandom(problems, i))
+    advanceProblem()
     setAnswer('')
     setSubmitted(false)
     setCorrect(false)
@@ -51,27 +102,26 @@ export default function PracticePage({ topic }) {
     setHintsShown(0)
     setAttempts(0)
     setShowSolution(false)
-  }, [problems])
+  }, [advanceProblem])
 
   const handleRetry = useCallback(() => {
     setAnswer('')
     setSubmitted(false)
     setCorrect(false)
-    // keep hintsUsed/attempts — they already broke the streak
   }, [])
 
   const handleRevealHint = useCallback(() => {
     setHintsUsed(true)
-    setHintsShown(n => Math.min(n + 1, problem.hints.length))
-  }, [problem])
+    setHintsShown(n => Math.min(n + 1, currentProblem.hints.length))
+  }, [currentProblem])
 
   const handleShowSolution = useCallback(() => {
     setHintsUsed(true)
-    setHintsShown(problem.hints.length)
+    setHintsShown(currentProblem.hints.length)
     setShowSolution(true)
-  }, [problem])
+  }, [currentProblem])
 
-  if (!problem) {
+  if (!currentProblem) {
     return <div className={styles.empty}>No practice problems available for this section yet.</div>
   }
 
@@ -111,7 +161,7 @@ export default function PracticePage({ topic }) {
       {/* ── Problem card ── */}
       <AnimatePresence mode="wait">
         <motion.div
-          key={idx}
+          key={nonce}
           className={styles.card}
           style={{ '--color': topic.color }}
           initial={{ opacity: 0, y: 24 }}
@@ -121,9 +171,9 @@ export default function PracticePage({ topic }) {
         >
           {/* Question */}
           <div className={styles.questionBlock} style={{ borderBottomColor: topic.color + '33' }}>
-            <p className={styles.questionText}>{problem.question}</p>
+            <p className={styles.questionText}>{currentProblem.question}</p>
             <div className={styles.mathDisplay}>
-              <BlockMath math={problem.latex} />
+              <BlockMath math={currentProblem.latex} />
             </div>
           </div>
 
@@ -146,12 +196,12 @@ export default function PracticePage({ topic }) {
                   Check Answer
                 </button>
 
-                {hintsShown < problem.hints.length && (
+                {hintsShown < currentProblem.hints.length && (
                   <button className={styles.hintBtn} onClick={handleRevealHint}>
-                    💡 Hint ({hintsShown + 1}/{problem.hints.length})
+                    💡 Hint ({hintsShown + 1}/{currentProblem.hints.length})
                   </button>
                 )}
-                {hintsShown === problem.hints.length && !showSolution && (
+                {hintsShown === currentProblem.hints.length && !showSolution && (
                   <button className={styles.hintBtn} onClick={handleShowSolution}>
                     👁 Show solution
                   </button>
@@ -186,7 +236,7 @@ export default function PracticePage({ topic }) {
                   <div>
                     <p className={styles.resultTitle}>Not quite.</p>
                     <p className={styles.resultSub}>
-                      Answer: <strong>{problem.answerLatex}</strong>
+                      Answer: <strong>{currentProblem.answerLatex}</strong>
                     </p>
                     <div className={styles.retryRow}>
                       <button className={styles.retryBtn} onClick={handleRetry}>
@@ -221,7 +271,7 @@ export default function PracticePage({ topic }) {
         <div className={styles.hintsPanel}>
           <h3 className={styles.hintsPanelTitle}>Solution Steps</h3>
 
-          {problem.hints.slice(0, hintsShown).map((hint, i) => (
+          {currentProblem.hints.slice(0, hintsShown).map((hint, i) => (
             <motion.div
               key={i}
               className={styles.hintStep}
@@ -243,7 +293,7 @@ export default function PracticePage({ topic }) {
           ))}
 
           {/* Reveal next step button while answering */}
-          {!submitted && hintsShown < problem.hints.length && (
+          {!submitted && hintsShown < currentProblem.hints.length && (
             <button
               className={styles.nextStepBtn}
               style={{ color: topic.color, borderColor: topic.color + '44' }}

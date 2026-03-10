@@ -21,6 +21,59 @@ const fracVal = (n, d) => n / d
 // ─── LIMITS ─────────────────────────────────────────────────────────────────
 
 const limGens = [
+  // H1. lim(x→0) (e^(ax) - e^(bx))/x = a - b  [L'Hôpital once]
+  () => {
+    const a = rng(2, 6)
+    const b = rng(1, a - 1)
+    const ans = a - b
+    return {
+      id: `lim_expab_${a}_${b}`,
+      question: "Evaluate the limit (exact value)",
+      latex: `\\lim_{x \\to 0} \\frac{e^{${a}x} - e^{${b}x}}{x}`,
+      answerLatex: `${ans}`,
+      check: nc(ans),
+      hints: [
+        { title: "0/0 form — apply L'Hôpital's Rule", formula: `\\lim_{x\\to 0}\\frac{${a}e^{${a}x} - ${b}e^{${b}x}}{1}` },
+        { title: "Evaluate at x = 0", formula: `${a}\\cdot e^0 - ${b}\\cdot e^0 = ${a} - ${b} = ${ans}` },
+      ],
+    }
+  },
+
+  // H2. lim(x→0) (tan(ax) - sin(ax))/x³ = a³/2
+  () => {
+    const a = rng(1, 4)
+    const ans = (a ** 3) / 2
+    return {
+      id: `lim_tansin_${a}`,
+      question: "Factor and apply known limits to evaluate",
+      latex: `\\lim_{x \\to 0} \\frac{\\tan(${a}x) - \\sin(${a}x)}{x^3}`,
+      answerLatex: frac(a ** 3, 2),
+      check: nc(ans),
+      hints: [
+        { title: "Factor sin(ax) from the numerator", formula: `\\frac{\\sin(${a}x)(1 - \\cos(${a}x))}{x^3 \\cos(${a}x)}` },
+        { title: "Split into three known limits", formula: `\\frac{\\sin(${a}x)}{${a}x} \\cdot \\frac{1-\\cos(${a}x)}{(${a}x)^2} \\cdot \\frac{${a}^3}{\\cos(${a}x)}` },
+        { title: "Apply the limits (sinc→1, (1-cos)/u²→½, cos→1)", formula: `1 \\cdot \\frac{1}{2} \\cdot ${a ** 3} = ${frac(a ** 3, 2)}` },
+      ],
+    }
+  },
+
+  // H3. lim(x→∞) x(√(1 + a/x) - 1) = a/2  [binomial / conjugate]
+  () => {
+    const a = pick([2, 4, 6, 8, 10])
+    const ans = a / 2
+    return {
+      id: `lim_sqrtinf_${a}`,
+      question: "Evaluate using the conjugate or binomial approximation",
+      latex: `\\lim_{x \\to \\infty} x\\!\\left(\\sqrt{1 + \\frac{${a}}{x}} - 1\\right)`,
+      answerLatex: `${ans}`,
+      check: nc(ans),
+      hints: [
+        { title: "Multiply by the conjugate", formula: `x \\cdot \\frac{(${a}/x)}{\\sqrt{1+${a}/x}+1}` },
+        { title: "As x → ∞, the radical → 1", formula: `\\frac{${a}}{\\sqrt{1+0}+1} = \\frac{${a}}{2} = ${ans}` },
+      ],
+    }
+  },
+
   // 1. Difference quotient definition of derivative: lim(x→a) (x^n - a^n)/(x-a) = n·a^(n-1)
   () => {
     const a = pick([-3, -2, -1, 1, 2, 3])
@@ -140,6 +193,62 @@ const limGens = [
 // ─── DERIVATIVES ─────────────────────────────────────────────────────────────
 
 const derivGens = [
+  // H1. arctan chain rule: f(x) = arctan(ax), f'(1/a) = a/2
+  () => {
+    const a = rng(1, 5)
+    const ans = a / 2
+    return {
+      id: `deriv_arctan_${a}`,
+      question: `Find f'(1/${a})`,
+      latex: `f(x) = \\arctan(${a}x)`,
+      answerLatex: frac(a, 2),
+      check: nc(ans),
+      hints: [
+        { title: "Chain rule: d/dx[arctan(u)] = u'/(1+u²)", formula: `f'(x) = \\frac{${a}}{1 + ${a ** 2}x^2}` },
+        { title: `Substitute x = 1/${a}`, formula: `f'\\!\\left(\\tfrac{1}{${a}}\\right) = \\frac{${a}}{1 + ${a ** 2}\\cdot\\frac{1}{${a ** 2}}} = \\frac{${a}}{2}` },
+      ],
+    }
+  },
+
+  // H2. Product + chain: f(x) = e^(ax)sin(bx), f'(0) = b
+  () => {
+    const a = rng(1, 4)
+    const b = rng(1, 5)
+    const ans = b
+    return {
+      id: `deriv_expsin_${a}_${b}`,
+      question: `Find f'(0)`,
+      latex: `f(x) = e^{${a}x}\\sin(${b}x)`,
+      answerLatex: `${ans}`,
+      check: nc(ans),
+      hints: [
+        { title: "Product rule + chain rule", formula: `f'(x) = ${a}e^{${a}x}\\sin(${b}x) + ${b}e^{${a}x}\\cos(${b}x)` },
+        { title: "Evaluate at x = 0 (sin 0 = 0, cos 0 = 1, e⁰ = 1)", formula: `f'(0) = ${a}\\cdot 0 + ${b}\\cdot 1 = ${b}` },
+      ],
+    }
+  },
+
+  // H3. Logarithmic chain: f(x) = ln(x² + a²), f'(k) = 2k/(k²+a²)
+  () => {
+    const a = rng(1, 4)
+    const k = rng(1, 4)
+    const num = 2 * k
+    const den = k * k + a * a
+    const [sn, sd] = simplify(num, den)
+    const ans = num / den
+    return {
+      id: `deriv_lnchain_${a}_${k}`,
+      question: `Find f'(${k})`,
+      latex: `f(x) = \\ln(x^2 + ${a * a})`,
+      answerLatex: frac(sn, sd),
+      check: nc(ans),
+      hints: [
+        { title: "Chain rule: d/dx[ln u] = u'/u", formula: `f'(x) = \\frac{2x}{x^2 + ${a * a}}` },
+        { title: `Substitute x = ${k}`, formula: `f'(${k}) = \\frac{${num}}{${k * k} + ${a * a}} = ${frac(sn, sd)}` },
+      ],
+    }
+  },
+
   // 1. Polynomial derivative at a point
   () => {
     const a = rng(1, 4)
@@ -267,6 +376,68 @@ const derivGens = [
 // ─── APPLIED DERIVATIVES ─────────────────────────────────────────────────────
 
 const appDerivGens = [
+  // H1. Second derivative at a point: f(x) = ax⁴ + bx³, f''(k)
+  () => {
+    const a = rng(1, 3)
+    const b = rng(1, 4)
+    const k = pick([-1, 0, 1, 2])
+    const ans = 12 * a * k * k + 6 * b * k
+    return {
+      id: `appd_second_${a}_${b}_${k}`,
+      question: `Find f''(${k})`,
+      latex: `f(x) = ${a}x^4 + ${b}x^3`,
+      answerLatex: `${ans}`,
+      check: nc(ans),
+      hints: [
+        { title: "Differentiate twice using the power rule", formula: `f'(x) = ${4 * a}x^3 + ${3 * b}x^2, \\quad f''(x) = ${12 * a}x^2 + ${6 * b}x` },
+        { title: `Substitute x = ${k}`, formula: `f''(${k}) = ${12 * a}(${k})^2 + ${6 * b}(${k}) = ${ans}` },
+      ],
+    }
+  },
+
+  // H2. Optimization — closed box with square base: minimize SA given volume V
+  () => {
+    const cases = [[8, 2], [27, 3], [64, 4], [125, 5]]
+    const [V, side] = pick(cases)
+    return {
+      id: `appd_box_${V}`,
+      question: `A closed box with a square base has volume ${V} cm³. Find the side length of the base that minimizes total surface area`,
+      latex: `V = l^2 h = ${V},\\quad S = 2l^2 + 4lh`,
+      answerLatex: `${side}`,
+      check: nc(side),
+      hints: [
+        { title: "Express h in terms of l using the volume constraint", formula: `h = \\frac{${V}}{l^2}` },
+        { title: "Substitute into S and differentiate", formula: `S(l) = 2l^2 + \\frac{${4 * V}}{l}, \\quad S'(l) = 4l - \\frac{${4 * V}}{l^2}` },
+        { title: "Set S'(l) = 0 and solve", formula: `l^3 = ${V} \\implies l = ${side}` },
+      ],
+    }
+  },
+
+  // H3. Related rates — ladder sliding down wall
+  () => {
+    const scenarios = [
+      { L: 5, x: 3, y: 4 }, { L: 5, x: 4, y: 3 },
+      { L: 13, x: 5, y: 12 }, { L: 13, x: 12, y: 5 },
+      { L: 17, x: 8, y: 15 },
+    ]
+    const { L, x, y } = pick(scenarios)
+    const k = rng(1, 3)
+    const [sn, sd] = simplify(-x * k, y)
+    const ans = (-x * k) / y
+    return {
+      id: `appd_ladder_${L}_${x}_${k}`,
+      question: `A ${L} ft ladder leans against a wall. Its base slides away at ${k} ft/s. Find the rate at which the top is sliding when the base is ${x} ft from the wall (negative = sliding down)`,
+      latex: `x^2 + y^2 = ${L * L},\\quad \\frac{dx}{dt} = ${k}\\text{ ft/s}`,
+      answerLatex: `${frac(sn, sd)}\\text{ ft/s}`,
+      check: nc(ans),
+      hints: [
+        { title: "Differentiate x² + y² = L² implicitly with respect to t", formula: `2x\\frac{dx}{dt} + 2y\\frac{dy}{dt} = 0` },
+        { title: "Solve for dy/dt", formula: `\\frac{dy}{dt} = -\\frac{x}{y}\\cdot\\frac{dx}{dt}` },
+        { title: `Substitute x = ${x}, y = ${y}, dx/dt = ${k}`, formula: `\\frac{dy}{dt} = -\\frac{${x}}{${y}}\\cdot ${k} = ${frac(sn, sd)}\\text{ ft/s}` },
+      ],
+    }
+  },
+
   // 1. Local max/min: f(x) = x³ - 3a²x, local max at x = -a
   () => {
     const a = rng(1, 5)
@@ -380,6 +551,63 @@ const appDerivGens = [
 // ─── INTEGRALS ───────────────────────────────────────────────────────────────
 
 const integralGens = [
+  // H1. Odd-power sine: ∫₀^(π/2) sin^(2k+1)(x) dx  [reduction via sin²=1-cos²]
+  () => {
+    const cases = [
+      { n: 3, num: 2, den: 3 },
+      { n: 5, num: 8, den: 15 },
+    ]
+    const { n, num, den } = pick(cases)
+    const ans = num / den
+    const kSteps = n === 3
+      ? `\\int_0^1(1-u^2)\\,du = \\left[u-\\tfrac{u^3}{3}\\right]_0^1 = \\tfrac{2}{3}`
+      : `\\int_0^1(1-2u^2+u^4)\\,du = 1-\\tfrac{2}{3}+\\tfrac{1}{5} = \\tfrac{8}{15}`
+    return {
+      id: `int_sinpow_${n}`,
+      question: `Evaluate using the identity sin²x = 1 − cos²x`,
+      latex: `\\int_0^{\\pi/2} \\sin^{${n}} x\\,dx`,
+      answerLatex: frac(num, den),
+      check: nc(ans),
+      hints: [
+        { title: `Factor out sin x: sin^${n}x = sin^${n - 2}x · sin x`, formula: `\\int_0^{\\pi/2}(1-\\cos^2 x)^{${(n - 1) / 2}}\\sin x\\,dx` },
+        { title: "Substitute u = cos x, bounds [0,1] → [1,0], flip sign", formula: `\\int_0^1(1-u^2)^{${(n - 1) / 2}}\\,du` },
+        { title: "Expand and integrate", formula: kSteps },
+      ],
+    }
+  },
+
+  // H2. IBP twice: ∫₀^1 x² e^x dx = e − 2
+  () => {
+    const ans = Math.E - 2
+    return {
+      id: `int_x2ex`,
+      question: "Evaluate using integration by parts twice",
+      latex: `\\int_0^1 x^2 e^x\\,dx`,
+      answerLatex: `e - 2`,
+      check: nc(ans),
+      hints: [
+        { title: "First IBP: u = x², dv = eˣ dx", formula: `\\left[x^2 e^x\\right]_0^1 - 2\\int_0^1 x e^x\\,dx = e - 2\\int_0^1 xe^x\\,dx` },
+        { title: "Second IBP: u = x, dv = eˣ dx", formula: `\\int_0^1 xe^x\\,dx = \\left[xe^x - e^x\\right]_0^1 = (e-e)-(-1) = 1` },
+        { title: "Combine", formula: `e - 2(1) = e - 2` },
+      ],
+    }
+  },
+
+  // H3. IBP with logarithm: ∫₀^1 x ln(x) dx = −1/4
+  () => {
+    return {
+      id: `int_xlnx`,
+      question: "Evaluate using integration by parts (handle the boundary carefully)",
+      latex: `\\int_0^1 x \\ln x\\,dx`,
+      answerLatex: `-\\dfrac{1}{4}`,
+      check: nc(-0.25),
+      hints: [
+        { title: "IBP: u = ln x, dv = x dx  →  du = dx/x, v = x²/2", formula: `\\left[\\frac{x^2}{2}\\ln x\\right]_0^1 - \\int_0^1\\frac{x}{2}\\,dx` },
+        { title: "Boundary: lim_{x→0⁺} x² ln x = 0 (L'Hôpital); upper limit = 0", formula: `0 - 0 - \\frac{1}{2}\\left[\\frac{x^2}{2}\\right]_0^1 = -\\frac{1}{4}` },
+      ],
+    }
+  },
+
   // 1. Power rule definite integral
   () => {
     const n = rng(1, 5)
@@ -500,6 +728,69 @@ const integralGens = [
 // ─── APPLIED INTEGRALS ───────────────────────────────────────────────────────
 
 const appIntGens = [
+  // H1. Volume of cone by disk method: V = (π/3)r²h
+  () => {
+    const cases = [
+      { r: 3, h: 4, V: 12 }, { r: 2, h: 6, V: 8 },
+      { r: 6, h: 1, V: 12 }, { r: 3, h: 3, V: 9 },
+    ]
+    const { r, h, V } = pick(cases)
+    const ans = Math.PI * V
+    return {
+      id: `appint_cone_${r}_${h}`,
+      question: `Use the disk method to find the volume of a cone with radius ${r} cm and height ${h} cm`,
+      latex: `y = \\frac{${r}}{${h}}x,\\quad V = \\pi\\int_0^{${h}}\\left(\\frac{${r}}{${h}}x\\right)^2\\!dx`,
+      answerLatex: `${V}\\pi`,
+      check: nc(ans),
+      hints: [
+        { title: "The cone is formed by y = (r/h)x revolved around the x-axis", formula: `V = \\pi\\int_0^{${h}}\\frac{${r * r}}{${h * h}}x^2\\,dx = \\frac{${r * r}\\pi}{${h * h}}\\cdot\\frac{${h * h * h}}{3}` },
+        { title: "Simplify", formula: `\\frac{\\pi r^2 h}{3} = \\frac{\\pi \\cdot ${r * r} \\cdot ${h}}{3} = ${V}\\pi` },
+      ],
+    }
+  },
+
+  // H2. Washer volume: y=x^(1/n) and y=x on [0,1]
+  () => {
+    const cases = [
+      { n: 2, numV: 1, denV: 6 },   // π(1/2 - 1/3) = π/6
+      { n: 3, numV: 4, denV: 15 },  // π(3/5 - 1/3) = 4π/15
+    ]
+    const { n, numV, denV } = pick(cases)
+    const ans = Math.PI * numV / denV
+    const nLabel = n === 2 ? '\\sqrt{x}' : `x^{1/${n}}`
+    return {
+      id: `appint_washer_${n}`,
+      question: `Find the volume when the region between y = ${nLabel} and y = x on [0,1] is revolved about the x-axis`,
+      latex: `V = \\pi\\int_0^1\\!\\left(${nLabel}^{\\,2} - x^2\\right)dx`,
+      answerLatex: numV === 1 ? `\\dfrac{\\pi}{${denV}}` : `\\dfrac{${numV}\\pi}{${denV}}`,
+      check: nc(ans),
+      hints: [
+        { title: "Washer: outer R = x^(1/n), inner r = x", formula: `V = \\pi\\int_0^1\\left(x^{2/${n}} - x^2\\right)dx` },
+        { title: "Integrate each term", formula: `\\pi\\left[\\frac{x^{1+2/${n}}}{1+2/${n}} - \\frac{x^3}{3}\\right]_0^1 = \\pi\\!\\left(\\frac{${n}}{${n + 2}} - \\frac{1}{3}\\right)` },
+        { title: "Simplify", formula: `\\frac{${numV}\\pi}{${denV}}` },
+      ],
+    }
+  },
+
+  // H3. Spring work: stretch from a to b, W = k(b²-a²)/2
+  () => {
+    const k = pick([2, 4, 6, 8])
+    const a = rng(1, 2)
+    const b = a + rng(1, 3)
+    const ans = k * (b * b - a * a) / 2
+    return {
+      id: `appint_spring_${k}_${a}_${b}`,
+      question: `A spring with constant k = ${k} N/m is stretched from x = ${a} m to x = ${b} m beyond natural length. Find the work done (J)`,
+      latex: `W = \\int_{${a}}^{${b}} ${k}x\\,dx`,
+      answerLatex: `${ans}`,
+      check: nc(ans),
+      hints: [
+        { title: "Hooke's Law: F = kx, work = ∫F dx", formula: `W = \\int_{${a}}^{${b}} ${k}x\\,dx = ${k}\\left[\\frac{x^2}{2}\\right]_{${a}}^{${b}}` },
+        { title: "Evaluate", formula: `\\frac{${k}}{2}\\left(${b * b} - ${a * a}\\right) = ${ans}\\text{ J}` },
+      ],
+    }
+  },
+
   // 1. Area between y=mx and y=x²: m³/6
   () => {
     const m = pick([2, 3, 4, 6])
@@ -597,6 +888,83 @@ const appIntGens = [
 // ─── DIFFERENTIAL EQUATIONS ──────────────────────────────────────────────────
 
 const diffEqGens = [
+  // H1. Second-order ODE: y'' + n²y = 0, IVP → y = A cos(nx) + B sin(nx)
+  () => {
+    const n = rng(1, 4)
+    const A = rng(1, 4)
+    const B = rng(1, 4)
+    // y(0) = A, y'(0) = nB → ask for y(π/(2n)) = B
+    const ans = B
+    return {
+      id: `de_2nd_${n}_${A}_${B}`,
+      question: `Solve the IVP and find y(π/${2 * n})`,
+      latex: `y'' + ${n * n}y = 0,\\quad y(0) = ${A},\\; y'(0) = ${n * B}`,
+      answerLatex: `${ans}`,
+      check: nc(ans),
+      hints: [
+        { title: "General solution: y = A cos(nx) + B sin(nx)", formula: `y = A\\cos(${n}x) + B\\sin(${n}x)` },
+        { title: "Apply ICs: y(0)=A gives first constant, y'(0)=nB gives second", formula: `y(0) = A = ${A},\\quad y'(0) = ${n}B = ${n * B} \\implies B = ${B}` },
+        { title: `Evaluate at x = π/${2 * n}: cos(π/2) = 0, sin(π/2) = 1`, formula: `y\\!\\left(\\frac{\\pi}{${2 * n}}\\right) = ${A}\\cdot 0 + ${B}\\cdot 1 = ${B}` },
+      ],
+    }
+  },
+
+  // H2. Linear first-order via integrating factor: y' + (n/x)y = x^m
+  () => {
+    const n = rng(1, 3)
+    const m = rng(1, 3)
+    const y0 = rng(1, 4)
+    // IF: x^n, solution: x^n·y = x^(n+m+1)/(n+m+1) + C
+    // y(1) = y0 → C = y0 - 1/(n+m+1)
+    // y(2) = (2^(n+m+1)/(n+m+1) + C) / 2^n
+    const denom = n + m + 1
+    const C = y0 - 1 / denom
+    const ans = (Math.pow(2, n + m + 1) / denom + C) / Math.pow(2, n)
+    const [sn, sd] = simplify(Math.round(C * denom), denom) // C as fraction
+    return {
+      id: `de_linear_${n}_${m}_${y0}`,
+      question: `Solve the IVP and find y(2) (enter exact or decimal)`,
+      latex: `y' + \\frac{${n}}{x}y = x^{${m}},\\quad y(1) = ${y0}`,
+      answerLatex: `\\approx ${ans.toFixed(3)}`,
+      check: nc(ans),
+      hints: [
+        { title: `Integrating factor: μ = e^{∫(${n}/x)dx} = x^${n}`, formula: `\\frac{d}{dx}\\left[x^{${n}}y\\right] = x^{${n + m}}` },
+        { title: "Integrate both sides", formula: `x^{${n}}y = \\frac{x^{${denom}}}{${denom}} + C` },
+        { title: `Apply y(1) = ${y0} to find C, then evaluate y(2)`, formula: `C = ${y0} - \\frac{1}{${denom}},\\quad y(2) \\approx ${ans.toFixed(3)}` },
+      ],
+    }
+  },
+
+  // H3. Euler's method 3 steps on y'=f(x,y)
+  () => {
+    // y' = x + y, y(0) = 1, h = 0.1, find y(0.3)
+    // y1 = 1 + 0.1(0+1) = 1.1
+    // y2 = 1.1 + 0.1(0.1+1.1) = 1.1 + 0.12 = 1.22
+    // y3 = 1.22 + 0.1(0.2+1.22) = 1.22 + 0.142 = 1.362
+    const h = 0.1
+    const cases = [
+      { f: (x,y)=>x+y, y0:1, label:"y' = x + y,\\; y(0)=1", ans: 1.362, desc:"x+y" },
+      { f: (x,y)=>x*x+y, y0:1, label:"y' = x^2 + y,\\; y(0)=1", ans: 1 + h*(0+1) + h*(h*h+1+h*(0+1))+ h*((2*h)**2 + (1 + h*(0+1) + h*(h*h+1+h*(0+1)))), desc:"x^2+y" },
+    ]
+    // Use the simpler first case
+    const { label, ans, desc } = cases[0]
+    const y1 = 1 + h*(0 + 1)
+    const y2 = y1 + h*(h + y1)
+    const y3 = Math.round((y2 + h*(2*h + y2)) * 1000) / 1000
+    return {
+      id: `de_euler3_xy`,
+      question: `Three steps of Euler's method (h = 0.1). Approximate y(0.3) for:`,
+      latex: `y' = x + y,\\quad y(0) = 1`,
+      answerLatex: `${y3}`,
+      check: nc(y3),
+      hints: [
+        { title: "Step 1: y₁ = y₀ + h·f(x₀, y₀)", formula: `y_1 = 1 + 0.1(0+1) = ${y1}` },
+        { title: "Step 2: y₂ = y₁ + h·f(x₁, y₁)", formula: `y_2 = ${y1} + 0.1(0.1+${y1}) = ${y2}` },
+        { title: "Step 3: y₃ = y₂ + h·f(x₂, y₂)", formula: `y_3 = ${y2} + 0.1(0.2+${y2}) = ${y3}` },
+      ],
+    }
+  },
+
   // 1. Exponential growth/decay: dy/dt = ky, y(0)=y0, find y(t0)
   () => {
     const k = pick([1, 2])
@@ -702,6 +1070,71 @@ const diffEqGens = [
 // ─── PARAMETRIC / POLAR ───────────────────────────────────────────────────────
 
 const parametricGens = [
+  // H1. Second parametric derivative: x=t², y=t³ → d²y/dx² = 3/(4t)
+  () => {
+    const k = pick([1, 2, 3, -1, -2])
+    const ans = 3 / (4 * k)
+    // Use 3k/(4k²) to keep negative in numerator
+    const [sn, sd] = simplify(3 * k, 4 * k * k)
+    return {
+      id: `para_d2y_${k}`,
+      question: `Find d²y/dx² at t = ${k} for the parametric curve`,
+      latex: `x = t^2,\\quad y = t^3`,
+      answerLatex: frac(sn, sd),
+      check: nc(ans),
+      hints: [
+        { title: "First derivative: dy/dx = (dy/dt)/(dx/dt)", formula: `\\frac{dy}{dx} = \\frac{3t^2}{2t} = \\frac{3t}{2}` },
+        { title: "Second derivative: d²y/dx² = d(dy/dx)/dt ÷ dx/dt", formula: `\\frac{d^2y}{dx^2} = \\frac{3/2}{2t} = \\frac{3}{4t}` },
+        { title: `Substitute t = ${k}`, formula: `\\frac{3}{4\\cdot${k}} = ${frac(sn, sd)}` },
+      ],
+    }
+  },
+
+  // H2. Speed of parametric curve: |v| = √((dx/dt)²+(dy/dt)²) at t=a
+  () => {
+    const a = rng(1, 4)
+    const b = rng(1, 4)
+    // x=a·cos(t), y=b·sin(t): speed = √(a²sin²t + b²cos²t)
+    // At t=0: speed = b.  At t=π/2: speed = a.
+    const tChoice = pick([0, 1])
+    const ans = tChoice === 0 ? b : a
+    const tLabel = tChoice === 0 ? '0' : '\\pi/2'
+    return {
+      id: `para_speed_${a}_${b}_${tChoice}`,
+      question: `Find the speed |v(t)| at t = ${tChoice === 0 ? '0' : 'π/2'}`,
+      latex: `x = ${a}\\cos t,\\quad y = ${b}\\sin t`,
+      answerLatex: `${ans}`,
+      check: nc(ans),
+      hints: [
+        { title: "Compute the component velocities", formula: `\\frac{dx}{dt} = -${a}\\sin t,\\quad \\frac{dy}{dt} = ${b}\\cos t` },
+        { title: `Evaluate at t = ${tLabel}`, formula: tChoice === 0 ? `\\frac{dx}{dt} = 0,\\; \\frac{dy}{dt} = ${b}` : `\\frac{dx}{dt} = -${a},\\; \\frac{dy}{dt} = 0` },
+        { title: "Compute speed", formula: tChoice === 0 ? `|v| = \\sqrt{0^2+${b}^2} = ${b}` : `|v| = \\sqrt{${a}^2+0^2} = ${a}` },
+      ],
+    }
+  },
+
+  // H3. Polar tangent: dy/dx for r = a at θ = π/4 (circle: dy/dx = cot(θ))
+  //     For r = a·sin(θ): x = a·sin(θ)cos(θ), y = a·sin²(θ)
+  //     dy/dx at θ=π/4: = cot(π/4) = 1? Let's use r=a+a·cos(θ) cardioid at θ=π/2.
+  //     dr/dθ = -a·sin(θ). At θ=π/2: r=a, dr/dθ=-a.
+  //     dy/dx = (dr/dθ·sin θ + r·cos θ)/(dr/dθ·cos θ - r·sin θ) = (-a·1+0)/(-a·0-a·1) = -a/(-a) = 1 ✓
+  () => {
+    const a = rng(1, 4)
+    const ans = 1
+    return {
+      id: `para_polar_cardioid_${a}`,
+      question: `Find dy/dx for the cardioid at θ = π/2`,
+      latex: `r = ${a}(1 + \\cos\\theta)`,
+      answerLatex: `1`,
+      check: nc(ans),
+      hints: [
+        { title: "At θ = π/2: r = a, dr/dθ = −a·sin(π/2) = −a", formula: `r = ${a}(1+0) = ${a},\\quad \\frac{dr}{d\\theta} = -${a}\\sin\\theta\\big|_{\\pi/2} = -${a}` },
+        { title: "Polar slope formula", formula: `\\frac{dy}{dx} = \\frac{(dr/d\\theta)\\sin\\theta + r\\cos\\theta}{(dr/d\\theta)\\cos\\theta - r\\sin\\theta}` },
+        { title: "Substitute and simplify (cos(π/2) = 0, sin(π/2) = 1)", formula: `\\frac{-${a}\\cdot 1 + ${a}\\cdot 0}{-${a}\\cdot 0 - ${a}\\cdot 1} = \\frac{-${a}}{-${a}} = 1` },
+      ],
+    }
+  },
+
   // 1. x=t², y=t³: dy/dx at t=k → 3k/2
   () => {
     const k = pick([1, 2, 3, 4, -1, -2])
@@ -797,6 +1230,60 @@ const parametricGens = [
 // ─── SERIES ──────────────────────────────────────────────────────────────────
 
 const seriesGens = [
+  // H1. Telescoping: Σ_{n=1}^∞ 1/((2n-1)(2n+1)) = 1/2
+  () => {
+    return {
+      id: `ser_tele_odd`,
+      question: 'Find the exact sum of the telescoping series',
+      latex: `\\sum_{n=1}^{\\infty} \\frac{1}{(2n-1)(2n+1)}`,
+      answerLatex: `\\dfrac{1}{2}`,
+      check: nc(0.5),
+      hints: [
+        { title: "Partial fractions", formula: `\\frac{1}{(2n-1)(2n+1)} = \\frac{1}{2}\\!\\left(\\frac{1}{2n-1}-\\frac{1}{2n+1}\\right)` },
+        { title: "Partial sums telescope — all interior terms cancel", formula: `S_N = \\frac{1}{2}\\left(1 - \\frac{1}{2N+1}\\right)\\to \\frac{1}{2}` },
+      ],
+    }
+  },
+
+  // H2. nth derivative from Taylor series: f^(k)(0) for sin(ax²)
+  () => {
+    const a = rng(1, 3)
+    // sin(ax²) = ax² - (ax²)³/6 + ... coefficient of x^6 is -a³/6
+    // f^(6)(0)/6! = -a³/6  →  f^(6)(0) = -a³·6!/6 = -a³·120 = -120a³
+    const deriv = -120 * a ** 3
+    return {
+      id: `ser_nthderiv_sin_${a}`,
+      question: `Find f⁽⁶⁾(0) using the Maclaurin series`,
+      latex: `f(x) = \\sin(${a === 1 ? '' : a}x^2)`,
+      answerLatex: `${deriv}`,
+      check: nc(deriv),
+      hints: [
+        { title: "Substitute u = ax² into the Maclaurin series for sin u", formula: `\\sin(${a === 1 ? '' : a}x^2) = ${a === 1 ? '' : a + '\\cdot'}x^2 - \\frac{${a ** 3}x^6}{6} + \\cdots` },
+        { title: "The x⁶ coefficient equals f⁽⁶⁾(0) / 6!", formula: `\\frac{f^{(6)}(0)}{720} = -\\frac{${a ** 3}}{6}` },
+        { title: "Solve for f⁽⁶⁾(0)", formula: `f^{(6)}(0) = -\\frac{${a ** 3} \\cdot 720}{6} = ${deriv}` },
+      ],
+    }
+  },
+
+  // H3. Alternating series remainder: |error| ≤ first omitted term
+  //     ln(1+x) = x - x²/2 + x³/3 - ...  Approximate ln(1.5) using first 3 terms.
+  //     Error ≤ (1/2)^4 / 4 = 1/64 ≈ 0.015625
+  () => {
+    // Use fixed x=1/2: first omitted term (4th term) = (1/2)^4/4 = 1/64
+    const ans = 1 / 64
+    return {
+      id: `ser_altrem_ln`,
+      question: "For ln(1.5) approximated by the first 3 terms of its alternating series, find the maximum error bound",
+      latex: `\\ln(1+x) = x - \\frac{x^2}{2} + \\frac{x^3}{3} - \\cdots,\\quad x = \\tfrac{1}{2}`,
+      answerLatex: `\\dfrac{1}{64}`,
+      check: nc(ans),
+      hints: [
+        { title: "Alternating Series Estimation Theorem: |error| ≤ |first omitted term|", body: "The 4th term is the first omitted term." },
+        { title: "Compute the 4th term", formula: `\\frac{(1/2)^4}{4} = \\frac{1/16}{4} = \\frac{1}{64}` },
+      ],
+    }
+  },
+
   // 1. Geometric series: ∑ar^n = a/(1-r), r=1/p
   () => {
     const a = rng(1, 5)
