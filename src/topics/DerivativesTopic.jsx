@@ -431,12 +431,12 @@ function InverseTrig({ color }) {
           <div className={styles.conceptTitle} style={{ color }}>All 6 Formulas</div>
           <div className={styles.conceptBody}>
             <ul>
-              <li>$(\arcsin x)' = \frac{'{'}1{'}'}{'{'}\\sqrt{'{'}1-x^2{'}'}{'}'} $</li>
-              <li>$(\arccos x)' = -\frac{'{'}1{'}'}{'{'}\\sqrt{'{'}1-x^2{'}'}{'}'} $</li>
-              <li>$(\arctan x)' = \frac{'{'}1{'}'}{'{'}1+x^2{'}'}$</li>
-              <li>$(\text{arccot}\, x)' = -\frac{'{'}1{'}'}{'{'}1+x^2{'}'}$</li>
-              <li>$(\text{arcsec}\, x)' = \frac{'{'}1{'}'}{'{'}|x|\\sqrt{'{'}x^2-1{'}'}{'}'} $</li>
-              <li>$(\text{arccsc}\, x)' = -\frac{'{'}1{'}'}{'{'}|x|\\sqrt{'{'}x^2-1{'}'}{'}'} $</li>
+              <li><InlineMath math={"(\\arcsin x)' = \\frac{1}{\\sqrt{1-x^2}}"} /></li>
+              <li><InlineMath math={"(\\arccos x)' = -\\frac{1}{\\sqrt{1-x^2}}"} /></li>
+              <li><InlineMath math={"(\\arctan x)' = \\frac{1}{1+x^2}"} /></li>
+              <li><InlineMath math={"(\\operatorname{arccot} x)' = -\\frac{1}{1+x^2}"} /></li>
+              <li><InlineMath math={"(\\operatorname{arcsec} x)' = \\frac{1}{|x|\\sqrt{x^2-1}}"} /></li>
+              <li><InlineMath math={"(\\operatorname{arccsc} x)' = -\\frac{1}{|x|\\sqrt{x^2-1}}"} /></li>
             </ul>
           </div>
         </div>

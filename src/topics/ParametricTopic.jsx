@@ -246,9 +246,11 @@ function PolarArea({ color }) {
     const xs = [], ys = []
     for (let t = a; t <= b; t += (b - a) / 400) {
       const r = evaluateExpression(rExpr.replace(/theta/g, `(${t})`), t)
-      if (r !== null && isFinite(r) && r >= 0) { xs.push(r * Math.cos(t)); ys.push(r * Math.sin(t)) }
+      if (r !== null && isFinite(r)) { xs.push(r * Math.cos(t)); ys.push(r * Math.sin(t)) }
+      else { xs.push(null); ys.push(null) }
     }
-    xs.push(0); ys.push(0)
+    // Close the filled region back to origin
+    if (xs.length > 0) { xs.push(0); ys.push(0) }
     return { xs, ys }
   }, [rExpr, a, b])
 

@@ -4,7 +4,7 @@ import GraphPanel from '../components/GraphPanel'
 import StepByStep from '../components/StepByStep'
 import CalcInput from '../components/CalcInput'
 import { generatePoints, evaluateExpression, numericalIntegral, riemannSum, formatNumber } from '../utils/mathHelpers'
-import { BlockMath } from 'react-katex'
+import { BlockMath, InlineMath } from 'react-katex'
 import styles from './Topic.module.css'
 
 const SUBTOPICS = [RiemannSums, FundamentalTheorem, USub, IntByParts, PartialFractions, ImproperIntegrals]
@@ -431,9 +431,9 @@ function PartialFractions({ color }) {
           <div className={styles.conceptTitle} style={{ color }}>When to Use Partial Fractions</div>
           <div className={styles.conceptBody}>
             <ul>
-              <li>Denominator has distinct linear factors: $\frac{A}{x-a} + \frac{B}{x-b}$</li>
-              <li>Repeated linear factors: $\frac{A}{x-a} + \frac{B}{(x-a)^2}$</li>
-              <li>Irreducible quadratic: $\frac{Ax+B}{x^2+bx+c}$</li>
+              <li>Distinct linear factors: <InlineMath math={"\\frac{A}{x-a} + \\frac{B}{x-b}"} /></li>
+              <li>Repeated linear factors: <InlineMath math={"\\frac{A}{x-a} + \\frac{B}{(x-a)^2}"} /></li>
+              <li>Irreducible quadratic: <InlineMath math={"\\frac{Ax+B}{x^2+bx+c}"} /></li>
             </ul>
             <p style={{marginTop:10, fontSize:'0.85rem', color:'rgba(240,240,255,0.4)'}}>
               Degree of numerator must be less than denominator (do long division first if not!)
