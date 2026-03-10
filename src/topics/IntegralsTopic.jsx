@@ -521,10 +521,10 @@ function ImproperIntegrals({ color }) {
           <div className={styles.conceptTitle} style={{ color }}>p-Test for ∫₁^∞ 1/xᵖ dx</div>
           <div className={styles.conceptBody}>
             <ul>
-              <li>$p > 1$: integral <strong style={{color:'#10b981'}}>converges</strong></li>
-              <li>$p \leq 1$: integral <strong style={{color:'#ef4444'}}>diverges</strong></li>
+              <li><InlineMath math="p > 1" />: integral <strong style={{color:'#10b981'}}>converges</strong></li>
+              <li><InlineMath math="p \leq 1" />: integral <strong style={{color:'#ef4444'}}>diverges</strong></li>
             </ul>
-            <p style={{marginTop:10}}>$\int_1^\infty \frac{'{'}1{'}'}{'{'}x^p{'}'}dx = \frac{'{'}1{'}'}{'{'}p-1{'}'}$ when $p > 1$</p>
+            <p style={{marginTop:10}}><InlineMath math="\int_1^\infty \frac{1}{x^p}dx = \frac{1}{p-1}" /> when <InlineMath math="p > 1" /></p>
           </div>
         </div>
       </div>
