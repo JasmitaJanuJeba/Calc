@@ -295,8 +295,8 @@ function PSeries({ color }) {
             <BlockMath math="\sum_{n=1}^\infty \frac{1}{n^p} \begin{cases} \text{converges} & p > 1 \\ \text{diverges} & p \leq 1 \end{cases}" />
             <ul style={{marginTop:12}}>
               <li>p=1: harmonic series (diverges, slowly)</li>
-              <li>p=2: $\pi^2/6 \approx 1.645$</li>
-              <li>p=4: $\pi^4/90 \approx 1.082$</li>
+              <li>p=2: <InlineMath math="\pi^2/6 \approx 1.645" /></li>
+              <li>p=4: <InlineMath math="\pi^4/90 \approx 1.082" /></li>
             </ul>
           </div>
         </div>
@@ -416,11 +416,11 @@ function TaylorSeries({ color }) {
           <div className={styles.conceptTitle} style={{ color }}>Common Taylor Series</div>
           <div className={styles.conceptBody}>
             <ul>
-              <li>$e^x = \sum \frac{'{'}x^n{'}'}{'{'}n!{'}'}$, all x</li>
-              <li>$\sin x = \sum \frac{'{'}(-1)^n x^{'{'}2n+1{'}'} {'}'}{'{'}(2n+1)!{'}'}$</li>
-              <li>$\cos x = \sum \frac{'{'}(-1)^n x^{'{'}2n{'}'} {'}'}{'{'}(2n)!{'}'}$</li>
-              <li>$\frac{'{'}1{'}'}{'{'}1-x{'}'} = \sum x^n$, |x| {'<'} 1</li>
-              <li>$\ln(1+x) = \sum \frac{'{'}(-1)^{'{'}n+1{'}'}x^n{'}'}{'{'}n{'}'}$, |x| {'<'} 1</li>
+              <li><InlineMath math="e^x = \sum \frac{x^n}{n!}" />, all x</li>
+              <li><InlineMath math="\sin x = \sum \frac{(-1)^n x^{2n+1}}{(2n+1)!}" /></li>
+              <li><InlineMath math="\cos x = \sum \frac{(-1)^n x^{2n}}{(2n)!}" /></li>
+              <li><InlineMath math="\frac{1}{1-x} = \sum x^n" />, <InlineMath math="|x| < 1" /></li>
+              <li><InlineMath math="\ln(1+x) = \sum \frac{(-1)^{n+1}x^n}{n}" />, <InlineMath math="|x| \leq 1" /></li>
             </ul>
           </div>
         </div>
@@ -475,8 +475,8 @@ function MaclaurinSeries({ color }) {
           <div className={styles.conceptTitle} style={{ color }}>Manipulation Tricks</div>
           <div className={styles.conceptBody}>
             <ul>
-              <li>Substitute $x \to x^2$: e.g., $e^{'{'}x^2{'}'}$</li>
-              <li>Multiply by x: e.g., $x\sin x$</li>
+              <li>Substitute <InlineMath math="x \to x^2" />: e.g., <InlineMath math="e^{x^2}" /></li>
+              <li>Multiply by x: e.g., <InlineMath math="x\sin x" /></li>
               <li>Differentiate term-by-term</li>
               <li>Integrate term-by-term</li>
               <li>Add/subtract series</li>

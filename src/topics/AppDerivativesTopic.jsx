@@ -3,7 +3,7 @@ import GraphPanel from '../components/GraphPanel'
 import StepByStep from '../components/StepByStep'
 import CalcInput from '../components/CalcInput'
 import { generatePoints, evaluateExpression, numericalDerivative, criticalPoints, inflectionPoints, formatNumber } from '../utils/mathHelpers'
-import { BlockMath } from 'react-katex'
+import { BlockMath, InlineMath } from 'react-katex'
 import styles from './Topic.module.css'
 
 const SUBTOPICS = [MVT, CriticalPoints, ConcavityInflection, Optimization, CurveSketching, LinearApprox]
@@ -105,7 +105,7 @@ function MVT({ color }) {
         <div className={styles.conceptCard} style={{ borderColor: color + '30' }}>
           <div className={styles.conceptTitle} style={{ color }}>MVT Statement</div>
           <div className={styles.conceptBody}>
-            <p>If $f$ is continuous on $[a,b]$ and differentiable on $(a,b)$, then $\exists\, c \in (a,b)$ such that:</p>
+            <p>If <InlineMath math="f" /> is continuous on <InlineMath math="[a,b]" /> and differentiable on <InlineMath math="(a,b)" />, then <InlineMath math="\exists\, c \in (a,b)" /> such that:</p>
             <BlockMath math="f'(c) = \frac{f(b) - f(a)}{b - a}" />
             <p style={{marginTop:8, fontSize:'0.85rem', color:'rgba(240,240,255,0.5)'}}>Geometric meaning: there's a tangent line parallel to the secant.</p>
           </div>
@@ -514,7 +514,7 @@ function LinearApprox({ color }) {
         <div className={styles.conceptCard} style={{ borderColor: color + '30' }}>
           <div className={styles.conceptTitle} style={{ color }}>Differentials</div>
           <div className={styles.conceptBody}>
-            <p>$dy = f'(x)\,dx$ where $dx = \Delta x$</p>
+            <p><InlineMath math="dy = f'(x)\,dx" /> where <InlineMath math="dx = \Delta x" /></p>
             <BlockMath math="\Delta y \approx dy = f'(a)\,\Delta x" />
             <p style={{marginTop:8, fontSize:'0.85rem', color:'rgba(240,240,255,0.5)'}}>Better approximations near the center point a. Accuracy decreases as x moves away from a.</p>
           </div>

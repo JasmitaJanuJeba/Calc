@@ -3,7 +3,7 @@ import GraphPanel from '../components/GraphPanel'
 import StepByStep from '../components/StepByStep'
 import CalcInput from '../components/CalcInput'
 import { evaluateExpression, numericalIntegral, formatNumber } from '../utils/mathHelpers'
-import { BlockMath } from 'react-katex'
+import { BlockMath, InlineMath } from 'react-katex'
 import styles from './Topic.module.css'
 
 const SUBTOPICS = [ParametricCurves, PolarCoords, PolarArea, VectorFunctions, ParticleMotion, ParametricArcLength]
@@ -119,7 +119,7 @@ function ParametricCurves({ color }) {
         <div className={styles.conceptCard} style={{ borderColor: color + '30' }}>
           <div className={styles.conceptTitle} style={{ color }}>Parametric Formulas</div>
           <div className={styles.conceptBody}>
-            <p>Slope: $\frac{'{'}dy{'}'}{'{'}dx{'}'} = \frac{'{'}dy/dt{'}'}{'{'}dx/dt{'}'}$</p>
+            <p>Slope: <InlineMath math="\frac{dy}{dx} = \frac{dy/dt}{dx/dt}" /></p>
             <p style={{margin:'8px 0'}}>Second Derivative:</p>
             <BlockMath math="\frac{d^2y}{dx^2} = \frac{d}{dt}\left[\frac{dy}{dx}\right] \div \frac{dx}{dt}" />
             <p>Arc Length:</p>
@@ -210,13 +210,13 @@ function PolarCoords({ color }) {
         <div className={styles.conceptCard} style={{ borderColor: color + '30' }}>
           <div className={styles.conceptTitle} style={{ color }}>Polar ↔ Cartesian</div>
           <div className={styles.conceptBody}>
-            <p>$x = r\cos\theta, \quad y = r\sin\theta$</p>
-            <p style={{marginTop:8}}>$r^2 = x^2 + y^2, \quad \theta = \arctan(y/x)$</p>
+            <p><InlineMath math="x = r\cos\theta,\quad y = r\sin\theta" /></p>
+            <p style={{marginTop:8}}><InlineMath math="r^2 = x^2 + y^2,\quad \theta = \arctan(y/x)" /></p>
             <p style={{marginTop:8}}>Common curves:</p>
             <ul>
-              <li>$r = a$: circle of radius a</li>
-              <li>$r = a + b\cos\theta$: limaçon/cardioid</li>
-              <li>$r = a\cos(n\theta)$: rose with n petals</li>
+              <li><InlineMath math="r = a" />: circle of radius a</li>
+              <li><InlineMath math="r = a + b\cos\theta" />: limaçon/cardioid</li>
+              <li><InlineMath math="r = a\cos(n\theta)" />: rose with n petals</li>
             </ul>
           </div>
         </div>
@@ -372,10 +372,10 @@ function VectorFunctions({ color }) {
           <div className={styles.conceptTitle} style={{ color }}>Key Formulas</div>
           <div className={styles.conceptBody}>
             <ul>
-              <li>$\vec{'{'}r{'}'} = \langle x(t), y(t) \rangle$</li>
-              <li>$\vec{'{'}v{'}'} = \langle x'(t), y'(t) \rangle$</li>
-              <li>$|\vec{'{'}v{'}'}| = \sqrt{'{'}(x')^2+(y')^2{'}'}$</li>
-              <li>$\vec{'{'}a{'}'} = \langle x''(t), y''(t) \rangle$</li>
+              <li><InlineMath math="\vec{r} = \langle x(t), y(t) \rangle" /></li>
+              <li><InlineMath math="\vec{v} = \langle x'(t), y'(t) \rangle" /></li>
+              <li><InlineMath math="|\vec{v}| = \sqrt{(x')^2+(y')^2}" /></li>
+              <li><InlineMath math="\vec{a} = \langle x''(t), y''(t) \rangle" /></li>
             </ul>
           </div>
         </div>

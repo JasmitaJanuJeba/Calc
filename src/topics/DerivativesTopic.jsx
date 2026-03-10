@@ -97,12 +97,12 @@ function PowerRule({ color }) {
           <div className={styles.conceptTitle} style={{ color }}>Differentiation Rules</div>
           <div className={styles.conceptBody}>
             <ul>
-              <li>Power: $\frac{'{'} d {'}'}{'{'} dx {'}'}[x^n] = nx^{'{'}n-1{'}'}$</li>
-              <li>Constant: $\frac{'{'} d {'}'}{'{'} dx {'}'}[c] = 0$</li>
-              <li>Sum/Diff: $(f \pm g)' = f' \pm g'$</li>
-              <li>Constant Multiple: $(cf)' = cf'$</li>
-              <li>$\frac{'{'} d {'}'}{'{'} dx {'}'}[e^x] = e^x$</li>
-              <li>$\frac{'{'} d {'}'}{'{'} dx {'}'}[\ln x] = \frac{'{'}1{'}'}{'{'}x{'}'}$</li>
+              <li>Power: <InlineMath math="\frac{d}{dx}[x^n] = nx^{n-1}" /></li>
+              <li>Constant: <InlineMath math="\frac{d}{dx}[c] = 0" /></li>
+              <li>Sum/Diff: <InlineMath math="(f \pm g)' = f' \pm g'" /></li>
+              <li>Constant Multiple: <InlineMath math="(cf)' = cf'" /></li>
+              <li><InlineMath math="\frac{d}{dx}[e^x] = e^x" /></li>
+              <li><InlineMath math="\frac{d}{dx}[\ln x] = \frac{1}{x}" /></li>
             </ul>
           </div>
         </div>
@@ -273,10 +273,10 @@ function ChainRule({ color }) {
           <div className={styles.conceptTitle} style={{ color }}>Chain Rule Examples</div>
           <div className={styles.conceptBody}>
             <ul>
-              <li>$\frac{'{'}d{'}'}{'{'}dx{'}'}[\sin(x^2)] = \cos(x^2) \cdot 2x$</li>
-              <li>$\frac{'{'}d{'}'}{'{'}dx{'}'}[e^{'{'}3x{'}'}] = e^{'{'}3x{'}'} \cdot 3$</li>
-              <li>$\frac{'{'}d{'}'}{'{'}dx{'}'}[(x^2+1)^5] = 5(x^2+1)^4 \cdot 2x$</li>
-              <li>$\frac{'{'}d{'}'}{'{'}dx{'}'}[\ln(x^2+1)] = \frac{'{'}2x{'}'}{'{'}x^2+1{'}'}$</li>
+              <li><InlineMath math="\frac{d}{dx}[\sin(x^2)] = \cos(x^2) \cdot 2x" /></li>
+              <li><InlineMath math="\frac{d}{dx}[e^{3x}] = e^{3x} \cdot 3" /></li>
+              <li><InlineMath math="\frac{d}{dx}[(x^2+1)^5] = 5(x^2+1)^4 \cdot 2x" /></li>
+              <li><InlineMath math="\frac{d}{dx}[\ln(x^2+1)] = \frac{2x}{x^2+1}" /></li>
             </ul>
           </div>
         </div>
@@ -372,9 +372,9 @@ function ImplicitDiff({ color }) {
         <div className={styles.conceptCard} style={{ borderColor: color + '30' }}>
           <div className={styles.conceptTitle} style={{ color }}>Key Insight</div>
           <div className={styles.conceptBody}>
-            <p>When differentiating $y$ with respect to $x$, always multiply by $\frac{'{'} dy {'}'}{'{'} dx {'}'}$:</p>
-            <p style={{margin:'8px 0'}}>$\frac{'{'}d{'}'}{'{'}dx{'}'}[y^2] = 2y\frac{'{'}dy{'}'}{'{'}dx{'}'}$</p>
-            <p>$\frac{'{'}d{'}'}{'{'}dx{'}'}[\sin y] = \cos y \cdot \frac{'{'}dy{'}'}{'{'}dx{'}'}$</p>
+            <p>When differentiating <InlineMath math="y" /> with respect to <InlineMath math="x" />, always multiply by <InlineMath math="\frac{dy}{dx}" />:</p>
+            <p style={{margin:'8px 0'}}><InlineMath math="\frac{d}{dx}[y^2] = 2y\frac{dy}{dx}" /></p>
+            <p><InlineMath math="\frac{d}{dx}[\sin y] = \cos y \cdot \frac{dy}{dx}" /></p>
           </div>
         </div>
       </div>

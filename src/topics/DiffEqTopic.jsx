@@ -4,7 +4,7 @@ import GraphPanel from '../components/GraphPanel'
 import StepByStep from '../components/StepByStep'
 import CalcInput from '../components/CalcInput'
 import { generatePoints, evaluateExpression, formatNumber } from '../utils/mathHelpers'
-import { BlockMath } from 'react-katex'
+import { BlockMath, InlineMath } from 'react-katex'
 import styles from './Topic.module.css'
 
 function evalDE(expr, xVal, yVal) {
@@ -103,7 +103,7 @@ function SeparableEq({ color }) {
           <div className={styles.conceptBody}>
             <BlockMath math="\frac{dy}{dx} = f(x) \cdot g(y)" />
             <ol style={{paddingLeft: 16, lineHeight: 2}}>
-              <li>Rewrite: $\frac{'{'}dy{'}'}{'{'}g(y){'}'} = f(x)dx$</li>
+              <li>Rewrite: <InlineMath math="\frac{dy}{g(y)} = f(x)\,dx" /></li>
               <li>Integrate both sides</li>
               <li>Solve for y (if possible)</li>
               <li>Apply initial condition to find C</li>
