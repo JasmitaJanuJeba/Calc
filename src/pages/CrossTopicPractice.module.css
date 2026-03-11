@@ -1,0 +1,676 @@
+/* ─── Page Layout ─── */
+.page {
+  min-height: 100vh;
+  background: radial-gradient(ellipse at 20% 10%, rgba(124,58,237,0.12) 0%, transparent 50%),
+              radial-gradient(ellipse at 80% 90%, rgba(6,182,212,0.08) 0%, transparent 50%),
+              #0a0a1a;
+  padding: 0 0 60px;
+  overflow-x: hidden;
+}
+
+/* ─── Hero Section ─── */
+.heroSection {
+  text-align: center;
+  padding: 40px 24px 32px;
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.backBtn {
+  position: absolute;
+  left: 0;
+  top: 40px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(240,240,255,0.7);
+  padding: 8px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+.backBtn:hover {
+  background: rgba(255,255,255,0.1);
+  color: #f0f0ff;
+}
+
+.heroIcon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+}
+
+.heroTitle {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 900;
+  background: linear-gradient(90deg, #a78bfa, #ec4899, #06b6d4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 12px;
+}
+
+.heroSub {
+  color: rgba(240,240,255,0.6);
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+/* ─── Stats ─── */
+.statsRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  font-size: 0.95rem;
+}
+
+.stat {
+  color: rgba(240,240,255,0.7);
+}
+.stat span {
+  font-weight: 700;
+  font-size: 1.2rem;
+  background: linear-gradient(90deg, #a78bfa, #ec4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.statDot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(240,240,255,0.3);
+}
+
+/* ─── Filter Row ─── */
+.filterRow {
+  display: flex;
+  gap: 10px;
+  padding: 0 24px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
+
+.filterBtn {
+  padding: 8px 18px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(240,240,255,0.6);
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+}
+.filterBtn:hover {
+  background: rgba(255,255,255,0.08);
+  color: #f0f0ff;
+}
+.filterActive {
+  background: rgba(124,58,237,0.25);
+  border-color: #7c3aed;
+  color: #a78bfa;
+}
+
+/* ─── Problem Grid ─── */
+.problemGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+  padding: 0 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ─── Problem Card ─── */
+.problemCard {
+  position: relative;
+  background: #12122a;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 16px;
+  padding: 20px;
+  text-align: left;
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.problemCard:hover {
+  border-color: var(--card-color, #7c3aed);
+  box-shadow: 0 0 24px rgba(124,58,237,0.2);
+}
+.cardSolved {
+  opacity: 0.6;
+}
+.cardColorBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  opacity: 0.8;
+}
+.solvedOverlay {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #10b981;
+  color: #fff;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+.cardEmoji {
+  font-size: 1.8rem;
+  margin-bottom: 8px;
+}
+.cardTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #f0f0ff;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+/* ─── Difficulty Dots ─── */
+.diffDots {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+.diffDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+.diffDotFilled {
+  border-color: transparent;
+}
+
+/* ─── Topic Chips ─── */
+.topicChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.topicChip {
+  font-size: 0.68rem;
+  padding: 2px 8px;
+  border-radius: 20px;
+  border: 1px solid;
+  font-weight: 500;
+}
+
+/* ─── Problem Header ─── */
+.problemHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  background: rgba(18,18,42,0.8);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  gap: 12px;
+}
+
+.problemProgress {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.problemTitle {
+  font-weight: 700;
+  color: #f0f0ff;
+  font-size: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.progressBadge {
+  font-size: 0.8rem;
+  color: rgba(240,240,255,0.45);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.nextBtn {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(240,240,255,0.7);
+  padding: 8px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.nextBtn:hover {
+  background: rgba(255,255,255,0.1);
+  color: #f0f0ff;
+}
+
+/* ─── Two-Column Problem View ─── */
+.problemView {
+  display: grid;
+  grid-template-columns: 45% 55%;
+  gap: 0;
+  max-width: 1400px;
+  margin: 0 auto;
+  min-height: calc(100vh - 70px);
+}
+
+@media (max-width: 900px) {
+  .problemView {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ─── Setup Panel ─── */
+.setupPanel {
+  padding: 24px;
+  border-right: 1px solid rgba(255,255,255,0.06);
+  overflow-y: auto;
+}
+
+.realWorldBadge {
+  display: inline-block;
+  background: rgba(6,182,212,0.1);
+  border: 1px solid rgba(6,182,212,0.3);
+  color: #06b6d4;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 14px;
+}
+
+.introText {
+  color: rgba(240,240,255,0.8);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+/* ─── Slider ─── */
+.sliderRow {
+  margin: 16px 0;
+  padding: 14px 16px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+}
+.sliderLabel {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #a78bfa;
+  margin-bottom: 8px;
+}
+.slider {
+  width: 100%;
+  accent-color: #7c3aed;
+  cursor: pointer;
+}
+.sliderRange {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: rgba(240,240,255,0.4);
+  margin-top: 4px;
+}
+
+/* ─── Topics Connected ─── */
+.topicsConnected {
+  margin-top: 16px;
+}
+.topicsLabel {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(240,240,255,0.4);
+  display: block;
+  margin-bottom: 8px;
+}
+.topicPills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.topicPill {
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid;
+  font-weight: 600;
+}
+
+/* ─── Solve Panel ─── */
+.solvePanel {
+  padding: 24px;
+  overflow-y: auto;
+}
+
+/* ─── Question Section ─── */
+.questionSection {
+  margin-bottom: 24px;
+}
+.questionText {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #f0f0ff;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+.latexDisplay {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  overflow-x: auto;
+}
+
+/* ─── Answer Section ─── */
+.answerSection {
+  margin-bottom: 16px;
+}
+.checkBtn {
+  margin-top: 12px;
+  width: 100%;
+  padding: 13px;
+  background: linear-gradient(135deg, #7c3aed, #ec4899);
+  border: none;
+  border-radius: 12px;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+}
+.checkBtn:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+.checkBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ─── Result Banners ─── */
+.resultCorrect {
+  padding: 14px 18px;
+  background: rgba(16,185,129,0.15);
+  border: 1px solid rgba(16,185,129,0.4);
+  border-radius: 12px;
+  color: #10b981;
+  font-weight: 700;
+  margin-bottom: 16px;
+  font-size: 1rem;
+}
+.answerLatex {
+  display: block;
+  margin-top: 8px;
+}
+.resultWrong {
+  padding: 12px 18px;
+  background: rgba(239,68,68,0.12);
+  border: 1px solid rgba(239,68,68,0.35);
+  border-radius: 12px;
+  color: #f87171;
+  font-weight: 600;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.95rem;
+}
+.showSolBtn {
+  background: rgba(239,68,68,0.2);
+  border: 1px solid rgba(239,68,68,0.4);
+  color: #f87171;
+  padding: 4px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+.showSolBtn:hover {
+  background: rgba(239,68,68,0.35);
+}
+
+/* ─── Hints ─── */
+.hintsSection {
+  margin-top: 12px;
+}
+.hintCard {
+  background: rgba(245,158,11,0.07);
+  border: 1px solid rgba(245,158,11,0.25);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+}
+.hintTitle {
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: #f59e0b;
+  margin-bottom: 6px;
+}
+.hintText {
+  font-size: 0.87rem;
+  color: rgba(240,240,255,0.75);
+  line-height: 1.5;
+  margin: 4px 0;
+}
+.hintFormula {
+  overflow-x: auto;
+  font-size: 0.85em;
+}
+.hintBtn {
+  width: 100%;
+  padding: 10px;
+  background: rgba(245,158,11,0.1);
+  border: 1px solid rgba(245,158,11,0.25);
+  border-radius: 10px;
+  color: #f59e0b;
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 600;
+  transition: background 0.2s;
+  margin-top: 4px;
+}
+.hintBtn:hover {
+  background: rgba(245,158,11,0.18);
+}
+
+/* ─── Solution Section ─── */
+.solutionSection {
+  margin-top: 8px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+  padding-top: 24px;
+}
+.solutionHeader {
+  margin-bottom: 20px;
+}
+.solutionHeader h3 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #f0f0ff;
+  margin-bottom: 10px;
+}
+.answerDisplay {
+  background: rgba(124,58,237,0.1);
+  border: 1px solid rgba(124,58,237,0.3);
+  border-radius: 10px;
+  padding: 14px;
+  text-align: center;
+  overflow-x: auto;
+}
+
+/* ─── Step Cards ─── */
+.stepsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+.stepCard {
+  display: flex;
+  gap: 14px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  padding: 16px;
+}
+.stepNumber {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #fff;
+  flex-shrink: 0;
+}
+.stepContent {
+  flex: 1;
+  min-width: 0;
+}
+.stepTitle {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #f0f0ff;
+  margin-bottom: 6px;
+}
+.stepText {
+  font-size: 0.87rem;
+  color: rgba(240,240,255,0.75);
+  line-height: 1.5;
+  margin: 6px 0;
+}
+.stepFormula {
+  overflow-x: auto;
+  background: rgba(255,255,255,0.03);
+  border-radius: 8px;
+  padding: 8px;
+  margin: 8px 0;
+}
+.stepNote {
+  font-size: 0.82rem;
+  color: #10b981;
+  font-style: italic;
+  margin: 6px 0 0;
+}
+.stepGraph {
+  margin-top: 12px;
+  border-radius: 10px;
+  overflow: hidden;
+  height: 200px;
+}
+
+/* ─── Connection Note ─── */
+.connectionNote {
+  background: rgba(124,58,237,0.08);
+  border: 1px solid rgba(124,58,237,0.3);
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 20px;
+}
+.connectionNoteHeader {
+  font-weight: 800;
+  color: #a78bfa;
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+.connectionNotePills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.connectionPill {
+  font-size: 0.78rem;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid;
+  font-weight: 600;
+}
+.connectionNoteText {
+  font-size: 0.88rem;
+  color: rgba(240,240,255,0.75);
+  line-height: 1.6;
+}
+
+/* ─── Next / Back buttons ─── */
+.nextSection {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+.nextProblemBtn {
+  flex: 1;
+  padding: 13px;
+  border: none;
+  border-radius: 12px;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+}
+.nextProblemBtn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+.backToListBtn {
+  padding: 13px 18px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  color: rgba(240,240,255,0.7);
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+.backToListBtn:hover {
+  background: rgba(255,255,255,0.1);
+  color: #f0f0ff;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 600px) {
+  .filterRow {
+    padding: 0 12px 16px;
+  }
+  .problemGrid {
+    grid-template-columns: 1fr 1fr;
+    padding: 0 12px;
+    gap: 10px;
+  }
+  .setupPanel, .solvePanel {
+    padding: 16px;
+  }
+  .problemHeader {
+    padding: 12px 16px;
+  }
+}

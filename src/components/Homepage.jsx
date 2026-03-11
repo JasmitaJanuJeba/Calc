@@ -13,7 +13,7 @@ const PARTICLES = Array.from({ length: 20 }, (_, i) => ({
   color: ['#7c3aed','#ec4899','#06b6d4','#10b981','#f59e0b'][Math.floor(Math.random() * 5)],
 }))
 
-export default function Homepage({ onSelectTopic }) {
+export default function Homepage({ onSelectTopic, onCrossTopicPractice }) {
   const progress = loadProgress()
   return (
     <div className={styles.home}>
@@ -74,6 +74,29 @@ export default function Homepage({ onSelectTopic }) {
           <div className={styles.stat}><span>∞</span> Practice</div>
         </div>
       </motion.div>
+
+      {/* Cross-Topic Challenges Banner */}
+      <motion.button
+        className={styles.challengeBanner}
+        onClick={onCrossTopicPractice}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5 }}
+        whileHover={{ scale: 1.01 }}
+        whileTap={{ scale: 0.99 }}
+      >
+        <div className={styles.challengeBannerGlow} />
+        <div className={styles.challengeBannerContent}>
+          <div className={styles.challengeBannerLeft}>
+            <div className={styles.challengeBannerEmoji}>⚡</div>
+            <div>
+              <div className={styles.challengeBannerTitle}>Cross-Topic Challenges</div>
+              <div className={styles.challengeBannerSub}>100 problems • Real-world applications • Connects everything you've learned</div>
+            </div>
+          </div>
+          <div className={styles.challengeBannerArrow}>Challenge Me →</div>
+        </div>
+      </motion.button>
 
       {/* Topic Grid */}
       <motion.div

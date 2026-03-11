@@ -249,3 +249,108 @@
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
+
+/* ─── Cross-Topic Challenge Banner ─── */
+.challengeBanner {
+  display: block;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto 32px;
+  position: relative;
+  background: #12122a;
+  border: 1px solid transparent;
+  background-clip: padding-box;
+  border-radius: 20px;
+  overflow: hidden;
+  cursor: pointer;
+  text-align: left;
+  padding: 0;
+  /* gradient border via box-shadow */
+  box-shadow: 0 0 0 1px rgba(124,58,237,0.5),
+              inset 0 0 60px rgba(124,58,237,0.05),
+              0 8px 32px rgba(124,58,237,0.15);
+  transition: box-shadow 0.3s, transform 0.2s;
+  z-index: 1;
+}
+.challengeBanner:hover {
+  box-shadow: 0 0 0 1.5px rgba(124,58,237,0.8),
+              inset 0 0 80px rgba(124,58,237,0.1),
+              0 12px 40px rgba(124,58,237,0.25);
+}
+
+.challengeBannerGlow {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg,
+    rgba(124,58,237,0.15) 0%,
+    rgba(236,72,153,0.08) 50%,
+    rgba(6,182,212,0.08) 100%);
+  pointer-events: none;
+}
+
+.challengeBannerContent {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 28px;
+  gap: 16px;
+  z-index: 1;
+}
+
+.challengeBannerLeft {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.challengeBannerEmoji {
+  font-size: 2.5rem;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 12px rgba(245,158,11,0.6));
+}
+
+.challengeBannerTitle {
+  font-size: 1.3rem;
+  font-weight: 800;
+  background: linear-gradient(90deg, #a78bfa, #ec4899, #06b6d4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 4px;
+}
+
+.challengeBannerSub {
+  font-size: 0.88rem;
+  color: rgba(240,240,255,0.55);
+  font-weight: 500;
+}
+
+.challengeBannerArrow {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #a78bfa;
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding: 10px 20px;
+  background: rgba(124,58,237,0.2);
+  border: 1px solid rgba(124,58,237,0.4);
+  border-radius: 12px;
+  transition: background 0.2s, color 0.2s;
+}
+.challengeBanner:hover .challengeBannerArrow {
+  background: rgba(124,58,237,0.35);
+  color: #c4b5fd;
+}
+
+@media (max-width: 600px) {
+  .challengeBannerContent {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 18px 20px;
+  }
+  .challengeBannerArrow {
+    width: 100%;
+    text-align: center;
+  }
+}
