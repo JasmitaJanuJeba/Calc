@@ -354,3 +354,73 @@
     text-align: center;
   }
 }
+
+/* ─── Past AP FRQ Banner ─── */
+.frqBanner {
+  display: block;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto 32px;
+  position: relative;
+  background: #12122a;
+  border: 1px solid transparent;
+  background-clip: padding-box;
+  border-radius: 20px;
+  overflow: hidden;
+  cursor: pointer;
+  text-align: left;
+  padding: 0;
+  box-shadow: 0 0 0 1px rgba(245,158,11,0.4),
+              inset 0 0 60px rgba(245,158,11,0.04),
+              0 8px 32px rgba(245,158,11,0.1);
+  transition: box-shadow 0.3s, transform 0.2s;
+  z-index: 1;
+}
+.frqBanner:hover {
+  box-shadow: 0 0 0 1.5px rgba(245,158,11,0.75),
+              inset 0 0 80px rgba(245,158,11,0.08),
+              0 12px 40px rgba(245,158,11,0.2);
+}
+
+.frqBannerGlow {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg,
+    rgba(245,158,11,0.1) 0%,
+    rgba(251,191,36,0.05) 50%,
+    rgba(217,119,6,0.08) 100%);
+  pointer-events: none;
+}
+
+.frqBannerEmoji {
+  font-size: 2.5rem;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 12px rgba(245,158,11,0.7));
+}
+
+.frqBannerTitle {
+  font-size: 1.3rem;
+  font-weight: 800;
+  background: linear-gradient(90deg, #f59e0b, #fbbf24, #f97316);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 4px;
+}
+
+.frqBannerArrow {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #f59e0b;
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding: 10px 20px;
+  background: rgba(245,158,11,0.15);
+  border: 1px solid rgba(245,158,11,0.35);
+  border-radius: 12px;
+  transition: background 0.2s, color 0.2s;
+}
+.frqBanner:hover .frqBannerArrow {
+  background: rgba(245,158,11,0.28);
+  color: #fbbf24;
+}

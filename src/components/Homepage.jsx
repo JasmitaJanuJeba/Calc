@@ -13,7 +13,7 @@ const PARTICLES = Array.from({ length: 20 }, (_, i) => ({
   color: ['#7c3aed','#ec4899','#06b6d4','#10b981','#f59e0b'][Math.floor(Math.random() * 5)],
 }))
 
-export default function Homepage({ onSelectTopic, onCrossTopicPractice }) {
+export default function Homepage({ onSelectTopic, onCrossTopicPractice, onFRQPractice }) {
   const progress = loadProgress()
   return (
     <div className={styles.home}>
@@ -95,6 +95,29 @@ export default function Homepage({ onSelectTopic, onCrossTopicPractice }) {
             </div>
           </div>
           <div className={styles.challengeBannerArrow}>Challenge Me →</div>
+        </div>
+      </motion.button>
+
+      {/* Past AP FRQ Banner */}
+      <motion.button
+        className={styles.frqBanner}
+        onClick={onFRQPractice}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.65 }}
+        whileHover={{ scale: 1.01 }}
+        whileTap={{ scale: 0.99 }}
+      >
+        <div className={styles.frqBannerGlow} />
+        <div className={styles.challengeBannerContent}>
+          <div className={styles.challengeBannerLeft}>
+            <div className={styles.frqBannerEmoji}>📝</div>
+            <div>
+              <div className={styles.frqBannerTitle}>Past AP FRQ Problems</div>
+              <div className={styles.challengeBannerSub}>36 problems · 6 years · Full worked solutions with graphs</div>
+            </div>
+          </div>
+          <div className={styles.frqBannerArrow}>Explore FRQs →</div>
         </div>
       </motion.button>
 
